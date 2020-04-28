@@ -1,0 +1,4 @@
+credentials.json
+data_pipeline.egg-info
+.pytest_cache
+venv
