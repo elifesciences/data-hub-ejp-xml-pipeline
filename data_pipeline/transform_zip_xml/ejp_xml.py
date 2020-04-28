@@ -1,8 +1,11 @@
 from datetime import datetime
 
+# pylint: disable=no-name-in-module
 from lxml.etree import Element
 
-from data_pipeline.transform_zip_xml.parsed_document import ParsedDocument, ParseDocumentError
+from data_pipeline.transform_zip_xml.parsed_document import (
+    ParsedDocument, ParseDocumentError
+)
 
 from data_pipeline.transform_zip_xml.ejp_manuscript_xml import (
     parse_xml as parse_manuscript_xml,
@@ -19,13 +22,14 @@ def parse_xml(
         provenance: dict) -> ParsedDocument:
     try:
         if is_person_xml(xml_root):
-            print("this is a person v2 xml")
             return parse_person_xml(
-                xml_root, modified_timestamp=modified_timestamp, provenance=provenance
+                xml_root, modified_timestamp=modified_timestamp,
+                provenance=provenance
             )
         if is_manuscript_xml(xml_root):
             return parse_manuscript_xml(
-                xml_root, modified_timestamp=modified_timestamp, provenance=provenance
+                xml_root, modified_timestamp=modified_timestamp,
+                provenance=provenance
             )
     except Exception as exception:
         raise ParseDocumentError(

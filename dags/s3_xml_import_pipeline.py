@@ -1,7 +1,6 @@
 import json
 import os
 from datetime import timedelta
-import yaml
 from airflow import DAG
 from airflow.models import Variable
 from airflow.models.dagrun import DagRun
@@ -10,8 +9,11 @@ from airflow.operators.python_operator import ShortCircuitOperator
 from data_pipeline.dag_pipeline_config.xml_config import eJPXmlDataConfig
 from data_pipeline.etl_state import get_stored_state
 from data_pipeline.etl import (
-    transform_load_data,
-    NamedLiterals
+    etl_ejp_xml_zip,
+)
+from data_pipeline.utils import (
+    NamedDataPipelineLiterals as named_literals,
+    get_yaml_file_as_dict
 )
 from data_pipeline.etl_state import update_state, update_object_latest_dates
 from data_pipeline.utils.dags.airflow_s3_util_extension import (
@@ -27,13 +29,6 @@ INITIAL_S3_XML_FILE_LAST_MODIFIED_DATE_ENV_NAME = (
     "INITIAL_S3_XML_FILE_LAST_MODIFIED_DATE"
 )
 DEFAULT_INITIAL_S3_XML_FILE_LAST_MODIFIED_DATE = "2020-04-27 21:10:13"
-
-EJP_XML_SCHEDULE_INTERVAL_ENV_NAME = (
-    "EJP_XML_SCHEDULE_INTERVAL"
-)
-EJP_XML_CONFIG_FILE_PATH_ENV_NAME = (
-    "EJP_XML_CONFIG_FILE_PATH"
-)
 
 DEPLOYMENT_ENV_ENV_NAME = "DEPLOYMENT_ENV"
 DEFAULT_DEPLOYMENT_ENV_VALUE = "ci"
@@ -63,7 +58,7 @@ def get_default_args_with_notification_emails():
 S3_XML_ETL_DAG = DAG(
     dag_id=DAG_ID,
     schedule_interval=os.getenv(
-        EJP_XML_SCHEDULE_INTERVAL_ENV_NAME
+        named_literals.EJP_XML_SCHEDULE_INTERVAL_ENV_NAME
     ),
     default_args=get_default_args_with_notification_emails(),
     dagrun_timeout=timedelta(minutes=60),
@@ -76,17 +71,12 @@ def get_variable_key(pipeline_id):
     return DAG_ID + pipeline_id
 
 
-def get_yaml_file_as_dict(file_location: str) -> dict:
-    with open(file_location, 'r') as yaml_file:
-        return yaml.safe_load(yaml_file)
-
-
 def is_dag_etl_running(**context):
     dep_env = os.getenv(
         DEPLOYMENT_ENV_ENV_NAME, DEFAULT_DEPLOYMENT_ENV_VALUE
     )
     conf_file_path = os.getenv(
-        EJP_XML_CONFIG_FILE_PATH_ENV_NAME
+        named_literals.EJP_XML_CONFIG_FILE_PATH_ENV_NAME
     )
     data_config_dict = get_yaml_file_as_dict(
         conf_file_path
@@ -98,12 +88,14 @@ def is_dag_etl_running(**context):
 
     if dag_run_var_value:
         dag_run_var_value_dict = json.loads(dag_run_var_value)
-        prev_run_id = dag_run_var_value_dict.get(NamedLiterals.RUN_ID)
+        prev_run_id = dag_run_var_value_dict.get(
+            named_literals.RUN_ID
+        )
         dag_runs = DagRun.find(dag_id=DAG_ID, run_id=prev_run_id)
         if (
                 len(dag_runs) > 0 and
                 (dag_runs[0]).get_state()
-                == NamedLiterals.DAG_RUNNING_STATUS
+                == named_literals.DAG_RUNNING_STATUS
         ):
             return False
     context["ti"].xcom_push(key="data_config",
@@ -121,14 +113,14 @@ def update_prev_run_id_var_val(**context):
         task_ids="Should_Remaining_Tasks_Execute"
     )
     data_config = eJPXmlDataConfig(data_config_dict, dep_env)
-    run_id = context.get(NamedLiterals.RUN_ID)
+    run_id = context.get(named_literals.RUN_ID)
     Variable.set(
         get_variable_key(data_config.etl_id),
-        json.dumps({NamedLiterals.RUN_ID: run_id})
+        json.dumps({named_literals.RUN_ID: run_id})
     )
 
 
-def etl_new_csv_files(**context):
+def etl_new_ejp_xml_files(**context):
     dep_env = os.getenv(
         DEPLOYMENT_ENV_ENV_NAME, DEFAULT_DEPLOYMENT_ENV_VALUE
     )
@@ -140,12 +132,13 @@ def etl_new_csv_files(**context):
     data_config = eJPXmlDataConfig(data_config_dict, dep_env)
 
     obj_pattern_with_latest_dates = (
-        get_stored_state(data_config,
-                         get_default_initial_s3_last_modified_date()
-                         )
+        get_stored_state(
+            data_config,
+            get_default_initial_s3_last_modified_date()
+        )
     )
     hook = S3HookNewFileMonitor(
-        aws_conn_id=NamedLiterals.DEFAULT_AWS_CONN_ID,
+        aws_conn_id=named_literals.DEFAULT_AWS_CONN_ID,
         verify=None
     )
     new_s3_files = hook.get_new_object_key_names(
@@ -154,17 +147,20 @@ def etl_new_csv_files(**context):
     )
     for object_key_pattern, matching_files_list in new_s3_files.items():
         sorted_matching_files_list = (
-            sorted(matching_files_list,
-                   key=lambda file_meta:
-                   file_meta[NamedLiterals.S3_FILE_METADATA_LAST_MODIFIED_KEY]
-                   )
+            sorted(
+                matching_files_list,
+                key=lambda file_meta:
+                file_meta[
+                    named_literals.S3_FILE_METADATA_LAST_MODIFIED_KEY
+                ]
+            )
         )
 
         for matching_file_metadata in sorted_matching_files_list:
-            transform_load_data(
+            etl_ejp_xml_zip(
                 data_config,
                 matching_file_metadata.get(
-                    NamedLiterals.S3_FILE_METADATA_NAME_KEY
+                    named_literals.S3_FILE_METADATA_NAME_KEY
                 )
             )
             updated_obj_pattern_with_latest_dates = (
@@ -172,7 +168,7 @@ def etl_new_csv_files(**context):
                     obj_pattern_with_latest_dates,
                     object_key_pattern,
                     matching_file_metadata.get(
-                        NamedLiterals.S3_FILE_METADATA_LAST_MODIFIED_KEY
+                        named_literals.S3_FILE_METADATA_LAST_MODIFIED_KEY
                     )
                 )
             )
@@ -221,7 +217,7 @@ LOCK_DAGRUN_UPDATE_PREVIOUS_RUNID = create_python_task(
 
 ETL_XML = create_python_task(
     S3_XML_ETL_DAG, "Etl_XML",
-    etl_new_csv_files,
+    etl_new_ejp_xml_files,
     email_on_failure=True
 )
 

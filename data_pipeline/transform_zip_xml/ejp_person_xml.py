@@ -3,22 +3,24 @@ from datetime import datetime
 from itertools import islice
 from typing import List
 
+# pylint: disable=no-name-in-module
 from lxml import etree
 from lxml.etree import Element
 
-from data_pipeline.utils.xml_transform_util.xml import(
+from data_pipeline.utils.xml_transform_util.xml import (
     get_and_decode_xml_child_text, get_and_decode_xml_text
 )
-from data_pipeline.utils.xml_transform_util.timestamp import format_to_iso_timestamp
-
+from data_pipeline.utils.xml_transform_util.timestamp import (
+    format_to_iso_timestamp
+)
 from data_pipeline.model.entities import PersonV2
 
 from data_pipeline.transform_zip_xml.parsed_document import ParsedDocument
-from data_pipeline.utils.xml_transform_util.extract import extract_list, format_optional_to_iso_timestamp
-
+from data_pipeline.utils.xml_transform_util.extract import (
+    extract_list, format_optional_to_iso_timestamp
+)
 
 LOGGER = logging.getLogger(__name__)
-
 
 GENERATED_PERSON_ID_PREFIX = 'generated-'
 
@@ -40,7 +42,9 @@ def membership_node_to_dict(membership_node: Element) -> dict:
     return {
         'is_enabled': membership_node.attrib['active_ind'] == '1',
         'reference_type': membership_node.attrib['member_id_type_cde'],
-        'reference_value': get_and_decode_xml_child_text(membership_node, 'member_id'),
+        'reference_value': get_and_decode_xml_child_text(
+            membership_node, 'member_id'
+        ),
         'start_timestamp': format_optional_to_iso_timestamp(
             get_and_decode_xml_child_text(membership_node, 'start_dt')
         ),
@@ -50,7 +54,9 @@ def membership_node_to_dict(membership_node: Element) -> dict:
         'modified_timestamp': format_optional_to_iso_timestamp(
             get_and_decode_xml_child_text(membership_node, 'last_update_dt')
         ),
-        'modified_by_person_id': get_and_decode_xml_child_text(membership_node, 'last_update_p_id')
+        'modified_by_person_id': get_and_decode_xml_child_text(
+            membership_node, 'last_update_p_id'
+        )
     }
 
 
@@ -58,12 +64,18 @@ def role_node_to_dict(role_node: Element) -> dict:
     return {
         'role_name': role_node.attrib['role_nm'],
         'is_enabled': role_node.attrib['active_ind'] == '1',
-        'start_timestamp': format_optional_to_iso_timestamp(role_node.attrib['start_dt']),
-        'end_timestamp': format_optional_to_iso_timestamp(role_node.attrib['end_dt']),
+        'start_timestamp': format_optional_to_iso_timestamp(
+            role_node.attrib['start_dt']
+        ),
+        'end_timestamp': format_optional_to_iso_timestamp(
+            role_node.attrib['end_dt']
+        ),
         'modified_timestamp': format_optional_to_iso_timestamp(
             get_and_decode_xml_child_text(role_node, 'update_dt')
         ),
-        'modified_by_person_id': get_and_decode_xml_child_text(role_node, 'update_p_id')
+        'modified_by_person_id': get_and_decode_xml_child_text(
+            role_node, 'update_p_id'
+        )
     }
 
 
@@ -75,10 +87,16 @@ def address_node_to_dict(address_node: Element) -> dict:
         'area': get_and_decode_xml_child_text(address_node, 'state'),
         'city': get_and_decode_xml_child_text(address_node, 'city'),
         'postal_code': get_and_decode_xml_child_text(address_node, 'zip'),
-        'organization': get_and_decode_xml_child_text(address_node, 'organization'),
-        'department': get_and_decode_xml_child_text(address_node, 'department'),
+        'organization': get_and_decode_xml_child_text(
+            address_node, 'organization'
+        ),
+        'department': get_and_decode_xml_child_text(
+            address_node, 'department'
+        ),
         'division': get_and_decode_xml_child_text(address_node, 'division'),
-        'laboratory': get_and_decode_xml_child_text(address_node, 'laboratory'),
+        'laboratory': get_and_decode_xml_child_text(
+            address_node, 'laboratory'
+        ),
         'job_title': get_and_decode_xml_child_text(address_node, 'job_title'),
         'email': get_and_decode_xml_child_text(address_node, 'e_mail'),
         'telephone': get_and_decode_xml_child_text(address_node, 'telephone'),
@@ -94,13 +112,19 @@ def address_node_to_dict(address_node: Element) -> dict:
     }
 
 
-def dates_not_available_node_to_dict(dates_not_available_node: Element) -> dict:
+def dates_not_available_node_to_dict(
+        dates_not_available_node: Element
+) -> dict:
     return {
         'start_timestamp': format_optional_to_iso_timestamp(
-            get_and_decode_xml_child_text(dates_not_available_node, 'dna-start-date')
+            get_and_decode_xml_child_text(
+                dates_not_available_node, 'dna-start-date'
+            )
         ),
         'end_timestamp': format_optional_to_iso_timestamp(
-            get_and_decode_xml_child_text(dates_not_available_node, 'dna-end-date')
+            get_and_decode_xml_child_text(
+                dates_not_available_node, 'dna-end-date'
+            )
         )
     }
 
@@ -125,7 +149,9 @@ def person_node_to_dict(
     source_filename = provenance['source_filename']
     person_id = get_and_decode_xml_child_text(person_node, 'person-id')
     if not person_id:
-        person_id = generate_person_id(source_filename=source_filename, node_index=node_index)
+        person_id = generate_person_id(
+            source_filename=source_filename, node_index=node_index
+        )
     return {
         'provenance': {
             **provenance,
@@ -133,7 +159,9 @@ def person_node_to_dict(
         },
         'person_id': person_id,
         'modified_timestamp': format_to_iso_timestamp(
-            get_and_decode_xml_child_text(person_node, 'profile-modify-date') or
+            get_and_decode_xml_child_text(
+                person_node, 'profile-modify-date'
+            ) or
             modified_timestamp_str
         ),
         'status': get_and_decode_xml_child_text(person_node, 'status'),
@@ -142,20 +170,25 @@ def person_node_to_dict(
         'middle_name': get_and_decode_xml_child_text(person_node, 'middle_nm'),
         'last_name': get_and_decode_xml_child_text(person_node, 'last-name'),
         'native_name': get_and_decode_xml_child_text(person_node, 'native_nm'),
-        'institution': get_and_decode_xml_child_text(person_node, 'institution'),
+        'institution': get_and_decode_xml_child_text(
+            person_node, 'institution'
+        ),
         'email': get_and_decode_xml_child_text(person_node, 'email'),
-        'secondary_email': get_and_decode_xml_child_text(person_node, 'secondary-email'),
+        'secondary_email': get_and_decode_xml_child_text(
+            person_node, 'secondary-email'
+        ),
         'external_references': extract_list(
             person_node, 'memberships/membership', membership_node_to_dict
-        ),
-        'roles': extract_list(
-            person_node, 'roles/role', role_node_to_dict
         ),
         'addresses': extract_list(
             person_node, 'addresses/address', address_node_to_dict
         ),
+        'roles': extract_list(
+            person_node, 'roles/role', role_node_to_dict
+        ),
         'dates_not_available': extract_list(
-            person_node, 'dates-not-available/dna', dates_not_available_node_to_dict
+            person_node,
+            'dates-not-available/dna', dates_not_available_node_to_dict
         ),
         'keywords': extract_list(
             person_node, 'keywords/keyword', get_and_decode_xml_text
@@ -164,14 +197,17 @@ def person_node_to_dict(
             person_node, 'person-tags/person-tag', get_and_decode_xml_text
         ),
         'merged_into_person_ids': extract_list(
-            person_node, 'merge-info/merged-into-person-id', get_and_decode_xml_text
+            person_node,
+            'merge-info/merged-into-person-id', get_and_decode_xml_text
         ),
         'research_organisms': extract_list(
-            person_node, 'subject-area-list[@name="Research Organism(s)"]/subject-area',
+            person_node,
+            'subject-area-list[@name="Research Organism(s)"]/subject-area',
             get_and_decode_xml_text
         ),
         'subject_areas': extract_list(
-            person_node, 'subject-area-list[@name="Major Subject Area(s)"]/subject-area',
+            person_node,
+            'subject-area-list[@name="Major Subject Area(s)"]/subject-area',
             get_and_decode_xml_text
         )
     }
@@ -193,6 +229,7 @@ def log_no_person_id_summary(
     no_person_id_count = len(person_nodes_with_no_person_id)
     examples = list(islice(
         (
+            # pylint: disable=c-extension-no-member
             etree.tostring(person_node)
             for person_node in person_nodes_with_no_person_id
         ),
@@ -200,7 +237,8 @@ def log_no_person_id_summary(
     ))
     LOGGER.warning(
         'xml contains'
-        ' {no_person_id_count:,d} of {total_count:,d} ({no_person_id_percentage:.1f}%)'
+        ' {no_person_id_count:,d} of {total_count:,d}'
+        ' ({no_person_id_percentage:.1f}%)'
         ' person entries without person ids, e.g. {examples}'.format(
             no_person_id_count=no_person_id_count,
             total_count=total_count,
@@ -211,7 +249,8 @@ def log_no_person_id_summary(
 
 
 def parse_xml(
-        xml_root: Element, modified_timestamp: datetime,  # pylint: disable=unused-argument
+        # pylint: disable=unused-argument
+        xml_root: Element, modified_timestamp: datetime,
         provenance: dict) -> ParsedDocument:
     LOGGER.debug('parse_xml person xml: %s', provenance)
     modified_timestamp_str = format_to_iso_timestamp(modified_timestamp)
@@ -225,11 +264,15 @@ def parse_xml(
         )
         for node_index, person_node in enumerate(person_nodes)
     ]
-    person_nodes_with_no_person_id = get_person_nodes_with_generated_person_ids(
-        person_nodes, person_list
+    person_nodes_with_no_person_id = (
+        get_person_nodes_with_generated_person_ids(
+            person_nodes, person_list
+        )
     )
     if person_nodes_with_no_person_id:
-        log_no_person_id_summary(person_nodes_with_no_person_id, total_count=len(person_nodes))
+        log_no_person_id_summary(
+            person_nodes_with_no_person_id, total_count=len(person_nodes)
+        )
     LOGGER.info('number of extracted person records: %d', len(person_list))
 
     return ParsedPersonDocument(

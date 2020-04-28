@@ -1,9 +1,13 @@
 import json
 
-from data_pipeline.dag_pipeline_config.xml_config import eJPXmlDataConfig
 from botocore.exceptions import ClientError
-from data_pipeline.data_store.s3_data_service import download_s3_json_object, upload_s3_object
-from data_pipeline.utils.xml_transform_util.timestamp import convert_datetime_string_to_datetime, convert_datetime_to_string
+from data_pipeline.dag_pipeline_config.xml_config import eJPXmlDataConfig
+from data_pipeline.data_store.s3_data_service import (
+    download_s3_json_object, upload_s3_object
+)
+from data_pipeline.utils.xml_transform_util.timestamp import (
+    convert_datetime_string_to_datetime, convert_datetime_to_string
+)
 
 
 def update_state(
@@ -69,7 +73,3 @@ def update_object_latest_dates(
         object_pattern: convert_datetime_to_string(file_modified_timestamp)
     }
     return new_obj_pattern_with_latest_dates
-
-
-
-

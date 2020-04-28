@@ -31,6 +31,7 @@ class EntityDBLoadConfig:
         return self.get_full_file_location()
 
 
+# pylint: disable=invalid-name,too-many-instance-attributes
 class eJPXmlDataConfig:
     def __init__(
             self,
@@ -128,4 +129,3 @@ def replace_env_placeholder(
             deployment_env
         )
     return new_value
-

@@ -1,5 +1,6 @@
 import html
 
+# pylint: disable=no-name-in-module
 from lxml import etree
 from lxml.etree import Element
 
@@ -7,7 +8,9 @@ from lxml.etree import Element
 def parse_xml_and_show_error_line(open_fn, **kwargs):
     try:
         with open_fn() as source:
+            # pylint: disable=c-extension-no-member
             return etree.parse(source, **kwargs)
+    # pylint: disable=c-extension-no-member
     except etree.XMLSyntaxError as exception:
         error_lineno = exception.lineno
         with open_fn() as source:
@@ -29,10 +32,14 @@ def get_xml_text(node: Element, default_value=''):
 
 
 def get_and_decode_xml_text(node: Element, default_value=''):
-    return decode_html_entities(get_xml_text(node, default_value=default_value))
+    return decode_html_entities(
+        get_xml_text(node, default_value=default_value)
+    )
 
 
-def get_xml_child_text(parent_node: Element, child_name: str, default_value=None):
+def get_xml_child_text(
+        parent_node: Element, child_name: str, default_value=None
+):
     child = parent_node.find(child_name)
     return (
         get_xml_text(child, default_value='')
@@ -41,7 +48,13 @@ def get_xml_child_text(parent_node: Element, child_name: str, default_value=None
     )
 
 
-def get_and_decode_xml_child_text(parent_node: Element, child_name: str, default_value=None):
+def get_and_decode_xml_child_text(
+        parent_node: Element,
+        child_name: str,
+        default_value=None
+):
     return decode_html_entities(
-        get_xml_child_text(parent_node, child_name, default_value=default_value)
+        get_xml_child_text(
+            parent_node, child_name, default_value=default_value
+        )
     )

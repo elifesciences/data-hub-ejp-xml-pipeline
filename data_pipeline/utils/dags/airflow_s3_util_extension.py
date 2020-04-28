@@ -10,7 +10,10 @@ from airflow.sensors.base_sensor_operator import BaseSensorOperator
 from airflow.utils.decorators import apply_defaults
 
 from data_pipeline.dag_pipeline_config.xml_config import eJPXmlDataConfig
-from data_pipeline.etl import NamedLiterals, get_yaml_file_as_dict
+from data_pipeline.utils import (
+    NamedDataPipelineLiterals as NamedLiterals,
+    get_yaml_file_as_dict
+)
 
 
 # pylint: disable=abstract-method,too-many-arguments

@@ -1,5 +1,6 @@
 from datetime import datetime, timezone
 
+from dateutil import tz
 import dateutil.parser
 import pytz
 
@@ -25,7 +26,9 @@ def to_timestamp(timestamp_or_timestr) -> datetime:
 
 
 def format_to_iso_timestamp(timestamp_or_timestr) -> str:
-    return to_timestamp(timestamp_or_timestr).isoformat().replace('+00:00', 'Z')
+    return to_timestamp(
+        timestamp_or_timestr
+    ).isoformat().replace('+00:00', 'Z')
 
 
 def to_default_tz_display_format(timestamp: datetime) -> str:
