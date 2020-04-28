@@ -1,5 +1,3 @@
-
-
 def remove_key_with_null_value(record):
     if isinstance(record, dict):
         for key in list(record):
