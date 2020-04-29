@@ -61,26 +61,32 @@ class eJPXmlDataConfig:
             "stateFile", {}).get("bucket")
         self.state_file_object = updated_config.get(
             "stateFile", {}).get("object")
-        manuscript_table = updated_config.get("manuscriptTable")
-        manuscript_version_table = updated_config.get("manuscriptVersionTable")
-        person_table = updated_config.get("personTable")
-        person_v2_table = updated_config.get("personVersion2Table")
+        self.manuscript_table = updated_config.get(
+            "manuscriptTable"
+        )
+        self.manuscript_version_table = updated_config.get(
+            "manuscriptVersionTable"
+        )
+        self.person_table = updated_config.get("personTable")
+        self.person_v2_table = updated_config.get(
+            "personVersion2Table"
+        )
         self.entity_type_mapping = {
             ManuscriptVersion: EntityDBLoadConfig(
                 ManuscriptVersion.__name__,
-                manuscript_version_table
+                self.manuscript_version_table
             ),
             Manuscript: EntityDBLoadConfig(
                 Manuscript.__name__,
-                manuscript_table
+                self.manuscript_table
             ),
             Person: EntityDBLoadConfig(
                 Person.__name__,
-                person_table
+                self.person_table
             ),
             PersonV2: EntityDBLoadConfig(
                 PersonV2.__name__,
-                person_v2_table
+                self.person_v2_table
             )
         }
 
