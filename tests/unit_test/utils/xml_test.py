@@ -1,3 +1,4 @@
+# pylint: disable=no-name-in-module
 from lxml.builder import E
 
 from data_pipeline.utils.xml_transform_util.xml import (

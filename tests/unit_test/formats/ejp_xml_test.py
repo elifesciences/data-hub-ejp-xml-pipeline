@@ -1,6 +1,7 @@
 from unittest.mock import patch, MagicMock
 
 import pytest
+# pylint: disable=no-name-in-module
 from lxml.builder import E
 
 from data_pipeline.utils.xml_transform_util.timestamp import parse_timestamp

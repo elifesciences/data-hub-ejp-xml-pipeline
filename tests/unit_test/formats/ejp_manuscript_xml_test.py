@@ -1,7 +1,7 @@
 # pylint: disable=too-many-public-methods
 
 from typing import List
-
+# pylint: disable=no-name-in-module
 from lxml.builder import E
 from lxml.etree import Element
 
@@ -24,7 +24,9 @@ from ..utils.dict_to_xml import dict_to_xml
 TIMESTAMP_1 = '2018-01-01T03:04:05Z'
 TIMESTAMP_2 = '2018-02-02T03:04:05Z'
 
-NON_ISO_TIMESTAMP_1 = to_default_tz_display_format(parse_timestamp(TIMESTAMP_1))
+NON_ISO_TIMESTAMP_1 = to_default_tz_display_format(
+    parse_timestamp(TIMESTAMP_1)
+)
 
 COUNTRY_1 = 'Country 1'
 DOI_1 = '10.7554/test1'
@@ -140,7 +142,8 @@ def _parse_xml_with_defaults(*args, **kwargs):
 
 def _nested_node_object(tag_name: str, props: dict) -> Element:
     return dict_to_xml(
-        tag_name, props, list_and_item_tag_name_by_prop=LIST_AND_ITEM_TAG_NAME_BY_PROP
+        tag_name, props,
+        list_and_item_tag_name_by_prop=LIST_AND_ITEM_TAG_NAME_BY_PROP
     )
 
 
@@ -187,14 +190,16 @@ class TestParseXml:
     class TestPerson:
         def test_should_extract_id_fields(self):
             result = _parse_xml_with_defaults(
-                _manuscript_xml(person_nodes=[_person_node(
-                    PERSON_1
-                )])
+                _manuscript_xml(
+                    person_nodes=[_person_node(
+                        PERSON_1
+                    )]
+                )
             )
             assert len(result.persons) == 1
             assert result.persons[0].data['person_id'] == PERSON_ID_1
-            assert result.persons[0].modified_timestamp == parse_timestamp(
-                TIMESTAMP_1
+            assert result.persons[0].modified_timestamp == (
+                parse_timestamp(TIMESTAMP_1)
             )
 
         def test_should_include_provenance_field(self):
@@ -214,32 +219,43 @@ class TestParseXml:
             )
             keys = JSON_PERSON_1.keys()
             assert [
-                {k: v for k, v in p.data.items() if k in keys}
+                {
+                    key: value
+                    for key, value in p.data.items()
+                    if key in keys
+                }
                 for p in result.persons
             ] == [JSON_PERSON_1]
 
         def test_should_decode_html_entities(self):
             result = _parse_xml_with_defaults(
-                _manuscript_xml(person_nodes=[_person_node({
-                    **PERSON_1,
-                    'last-name': ENCODED_TEXT
-                })])
+                _manuscript_xml(
+                    person_nodes=[_person_node({
+                        **PERSON_1,
+                        'last-name': ENCODED_TEXT
+                    })]
+                )
             )
-            assert [p.data['last_name'] for p in result.persons] == [DECODED_TEXT]
+            assert (
+                [p.data['last_name'] for p in result.persons] ==
+                [DECODED_TEXT]
+            )
 
-        def test_should_fallback_to_file_modified_timestamp_if_profile_modify_date_is_blank(self):
+        def test_should_use_modified_timestamp_if_profile_modify_date_blank(self):
             result = _parse_xml_with_defaults(
-                _manuscript_xml(person_nodes=[_person_node({
-                    **PERSON_1,
-                    'profile-modify-date': ''
-                })]),
+                _manuscript_xml(
+                    person_nodes=[_person_node({
+                        **PERSON_1,
+                        'profile-modify-date': ''
+                    })]
+                ),
                 modified_timestamp=parse_timestamp(TIMESTAMP_1)
             )
             assert len(result.persons) == 1
-            assert result.persons[0].data['person_id'] == PERSON_ID_1
             assert result.persons[0].modified_timestamp == parse_timestamp(
                 TIMESTAMP_1
             )
+            assert result.persons[0].data['person_id'] == PERSON_ID_1
 
         def test_should_extract_roles(self):
             result = _parse_xml_with_defaults(
@@ -301,8 +317,8 @@ class TestParseXml:
                 })])
             )
             address = result.persons[0].data['addresses'][0]
-            assert address['start_timestamp'] is None
             assert address['end_timestamp'] is None
+            assert address['start_timestamp'] is None
 
     class TestManuscript:
         def test_should_extract_country_and_doi(self):
@@ -359,8 +375,10 @@ class TestParseXml:
                     'stages': [STAGE_1]
                 })])
             )
-            expected_version_id = derive_version_id_from_manuscript_id_and_created_timestamp(
-                MANUSCRIPT_ID_1, TIMESTAMP_1
+            expected_version_id = (
+                derive_version_id_from_manuscript_id_and_created_timestamp(
+                    MANUSCRIPT_ID_1, TIMESTAMP_1
+                )
             )
             assert result.versions[0].data['version_id'] == expected_version_id
 
@@ -375,9 +393,11 @@ class TestParseXml:
                     }]
                 })])
             )
-            assert [stage['stage_timestamp'] for stage in result.versions[0].data['stages']] == [
-                TIMESTAMP_1
-            ]
+            assert (
+                [stage['stage_timestamp'] for stage in result.versions[0].data['stages']]
+                ==
+                [TIMESTAMP_1]
+            )
             assert result.versions[0].data['created_timestamp'] == TIMESTAMP_1
 
         def test_should_extract_manuscript_id_and_long_identifier(self):
@@ -392,7 +412,7 @@ class TestParseXml:
                 MANUSCRIPT_NUMBER_1
             ]
 
-        def test_should_fallback_to_manuscript_id_from_filename_if_manuscript_number_is_empty(self):
+        def test_should_use_manuscript_id_from_filename_if_manuscript_number_empty(self):
             result = _parse_xml_with_defaults(
                 _manuscript_xml([_version_node({
                     **VERSION_1,
@@ -415,10 +435,15 @@ class TestParseXml:
                     'manuscript-type': MANUSCRIPT_TYPE_1
                 })])
             )
-            assert _versions_prop(result.versions, 'manuscript_type') == [MANUSCRIPT_TYPE_1]
+            assert (
+                _versions_prop(result.versions, 'manuscript_type')
+                == [MANUSCRIPT_TYPE_1]
+            )
 
-        def test_should_extract_overall_stage_and_shorted_type_from_initial_submission(self):
-            full_manuscript_type = '%s %s' % (INITIAL_SUBMISSION_TYPE_PREFIX, MANUSCRIPT_TYPE_1)
+        def test_should_extract_overall_stage_and_shorted_type_from_init_submission(self):
+            full_manuscript_type = (
+                '%s %s' % (INITIAL_SUBMISSION_TYPE_PREFIX, MANUSCRIPT_TYPE_1)
+            )
             result = _parse_xml_with_defaults(
                 _manuscript_xml([_version_node({
                     **VERSION_1,
@@ -428,8 +453,14 @@ class TestParseXml:
             assert _versions_prop(result.versions, 'overall_stage') == [
                 OverallStageNames.INITIAL_SUBMISSION
             ]
-            assert _versions_prop(result.versions, 'manuscript_type') == [MANUSCRIPT_TYPE_1]
-            assert _versions_prop(result.versions, 'full_manuscript_type') == [full_manuscript_type]
+            assert (
+                _versions_prop(result.versions, 'manuscript_type')
+                == [MANUSCRIPT_TYPE_1]
+            )
+            assert (
+                _versions_prop(result.versions, 'full_manuscript_type')
+                == [full_manuscript_type]
+            )
 
         def test_should_extract_overall_stage_and_type_from_full_submission(self):
             full_manuscript_type = MANUSCRIPT_TYPE_1
@@ -442,8 +473,14 @@ class TestParseXml:
             assert _versions_prop(result.versions, 'overall_stage') == [
                 OverallStageNames.FULL_SUBMISSION
             ]
-            assert _versions_prop(result.versions, 'manuscript_type') == [MANUSCRIPT_TYPE_1]
-            assert _versions_prop(result.versions, 'full_manuscript_type') == [MANUSCRIPT_TYPE_1]
+            assert (
+                _versions_prop(result.versions, 'manuscript_type')
+                == [MANUSCRIPT_TYPE_1]
+            )
+            assert (
+                _versions_prop(result.versions, 'full_manuscript_type')
+                == [MANUSCRIPT_TYPE_1]
+            )
 
         def test_should_extract_accept_decision(self):
             result = _parse_xml_with_defaults(

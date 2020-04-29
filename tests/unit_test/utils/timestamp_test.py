@@ -12,7 +12,9 @@ ISO_TIMESTAMP_1 = '2018-01-02T03:04:05Z'
 
 
 class TestParseTimestamp:
-    def test_should_parse_iso_date_and_time_space_separated_and_assume_us_eastern_tz(self):
+    def test_should_parse_iso_date_and_time_space_separated_and_assume_us_eastern_tz(
+            self
+    ):
         assert parse_timestamp(
             '2018-01-02 03:04:05'
         ) == datetime(2018, 1, 2, 8, 4, 5, tzinfo=timezone.utc)

@@ -1,6 +1,7 @@
 import logging
 from typing import List
 
+# pylint: disable=no-name-in-module
 from lxml import etree
 from lxml.builder import E
 from lxml.etree import Element
@@ -140,6 +141,7 @@ def _parse_xml_with_defaults(*args, **kwargs):
 
 def _person_xml(person_nodes: List[Element] = None):
     root = E.persons(*(person_nodes or []))
+    # pylint: disable=c-extension-no-member
     LOGGER.debug('person xml: %s', etree.tostring(root))
     return root
 
@@ -207,7 +209,10 @@ class TestParseXml:
                 _person_node(PERSON_1)
             ])
         )
-        assert [person.data['provenance']['node_index'] for person in result.persons] == [0, 1]
+        assert (
+            [person.data['provenance']['node_index'] for person in result.persons]
+            == [0, 1]
+        )
 
     def test_should_extract_basic_fields(self):
         result = _parse_xml_with_defaults(
@@ -228,9 +233,12 @@ class TestParseXml:
                 'last-name': ENCODED_TEXT
             })])
         )
-        assert [p.data['last_name'] for p in result.persons] == [DECODED_TEXT]
+        assert (
+            [p.data['last_name'] for p in result.persons]
+            == [DECODED_TEXT]
+        )
 
-    def test_should_fallback_to_file_modified_timestamp_if_profile_modify_date_is_blank(self):
+    def test_should_use_file_modified_timestamp_if_profile_modify_date_is_blank(self):
         result = _parse_xml_with_defaults(
             _person_xml(person_nodes=[_person_node({
                 **PERSON_1,
@@ -253,7 +261,8 @@ class TestParseXml:
         )
         external_reference = result.persons[0].data['external_references'][0]
         assert external_reference == {
-            'is_enabled': MEMBERSHIP_1['@active_ind'] == '1',  # use in combination with end date
+            # use in combination with end date
+            'is_enabled': MEMBERSHIP_1['@active_ind'] == '1',
             'reference_type': MEMBERSHIP_1['@member_id_type_cde'],
             'reference_value': MEMBERSHIP_1['member_id'],
             'start_timestamp': MEMBERSHIP_1['start_dt'],
@@ -271,7 +280,8 @@ class TestParseXml:
         )
         assert [p.data['roles'] for p in result.persons] == [[{
             'role_name': ROLE_1['@role_nm'],
-            'is_enabled': ROLE_1['@active_ind'] == '1',  # use in combination with end date
+            # use in combination with end date
+            'is_enabled': ROLE_1['@active_ind'] == '1',
             'start_timestamp': ROLE_1['@start_dt'],
             'end_timestamp': ROLE_1['@end_dt'],
             'modified_timestamp': ROLE_1['update_dt'],

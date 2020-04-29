@@ -5,13 +5,15 @@ from unittest.mock import patch, MagicMock
 from typing import Dict
 
 import pytest
-
+# pylint: disable=no-name-in-module
 from lxml.builder import E
 from lxml import etree
 
-from data_pipeline.utils.xml_transform_util.timestamp import parse_timestamp, format_to_iso_timestamp
+from data_pipeline.utils.xml_transform_util.timestamp import (
+    parse_timestamp, format_to_iso_timestamp
+)
 
-from data_pipeline.transform_zip_xml.ejp_manuscript_xml import ParsedManuscriptDocument
+# pylint: disable=c-extension-no-member
 
 import data_pipeline.transform_zip_xml.ejp_zip
 from data_pipeline.transform_zip_xml.ejp_zip import (
@@ -74,7 +76,11 @@ class TestParseGoXml:
 
 
 class TestIterParseXmlInZip:
-    def test_should_parse_single_xml(self, parse_xml_mock: MagicMock, datetime_mock: MagicMock):
+    def test_should_parse_single_xml(
+            self,
+            parse_xml_mock: MagicMock,
+            datetime_mock: MagicMock
+    ):
         datetime_mock.now.return_value = datetime(2001, 2, 3, 4, 5, 6)
         go_xml = _create_go_xml(
             create_date=TIMESTAMP_1,

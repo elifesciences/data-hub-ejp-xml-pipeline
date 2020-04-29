@@ -1,5 +1,6 @@
 from typing import Dict, List, Tuple, Union
 
+# pylint: disable=no-name-in-module
 from lxml.builder import E
 from lxml.etree import Element
 

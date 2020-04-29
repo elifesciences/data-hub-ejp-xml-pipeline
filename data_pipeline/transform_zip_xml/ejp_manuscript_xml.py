@@ -138,13 +138,12 @@ def person_node_to_dict(
     person_id = get_and_decode_xml_child_text(person_node, 'person-id')
     try:
         return {
-            'provenance': provenance,
             'person_id': person_id,
+            'provenance': provenance,
             'modified_timestamp': format_to_iso_timestamp(
                 get_and_decode_xml_child_text(
                     person_node, 'profile-modify-date'
-                ) or
-                modified_timestamp_str
+                ) or modified_timestamp_str
             ),
             'title': get_and_decode_xml_child_text(person_node, 'title'),
             'first_name': get_and_decode_xml_child_text(
@@ -214,8 +213,8 @@ def overall_stage_and_manuscript_type_from_full_manuscript_type(
     if full_manuscript_type.startswith(INITIAL_SUBMISSION_TYPE_PREFIX):
         overall_stage = OverallStageNames.INITIAL_SUBMISSION
         manuscript_type = full_manuscript_type[
-                          len(INITIAL_SUBMISSION_TYPE_PREFIX):
-                          ].strip()
+            len(INITIAL_SUBMISSION_TYPE_PREFIX):
+        ].strip()
     else:
         overall_stage = OverallStageNames.FULL_SUBMISSION
         manuscript_type = full_manuscript_type
@@ -229,11 +228,17 @@ def manuscript_id_and_number_from_version_node(
         version_node, 'manuscript-number'
     )
     try:
-        manuscript_id = manuscript_number_to_manuscript_id(manuscript_number)
+        manuscript_id = manuscript_number_to_manuscript_id(
+            manuscript_number
+        )
     except ValueError:
         # fallback to filename
-        manuscript_number = filename_to_manuscript_number(source_filename)
-        manuscript_id = manuscript_number_to_manuscript_id(manuscript_number)
+        manuscript_number = filename_to_manuscript_number(
+            source_filename
+        )
+        manuscript_id = manuscript_number_to_manuscript_id(
+            manuscript_number
+        )
     return manuscript_id, manuscript_number
 
 
