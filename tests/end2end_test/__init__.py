@@ -10,6 +10,7 @@ LOGGER = logging.getLogger(__name__)
 
 
 # pylint: disable=too-few-public-methods, missing-class-docstring
+# pylint: disable=too-many-instance-attributes
 class DataPipelineCloudResource:
     # pylint: disable=too-many-arguments
     def __init__(
@@ -78,10 +79,9 @@ def trigger_run_test_pipeline(
         pipeline_cloud_resource: DataPipelineCloudResource
 ):
     for table in [
-        pipeline_cloud_resource.manuscript_table,
-        pipeline_cloud_resource.manuscript_version_table,
-        pipeline_cloud_resource.person_table,
-        #pipeline_cloud_resource.person_v2_table
+            pipeline_cloud_resource.manuscript_table,
+            pipeline_cloud_resource.manuscript_version_table,
+            pipeline_cloud_resource.person_table,
     ]:
         truncate_table(
             pipeline_cloud_resource.project_name,
@@ -99,11 +99,11 @@ def trigger_run_test_pipeline(
     )
     assert not is_dag_running
     assert airflow_api.get_dag_status(dag_id, execution_date) == "success"
+    # add later pipeline_cloud_resource.person_v2_table
     for table in [
-        pipeline_cloud_resource.manuscript_table,
-        pipeline_cloud_resource.manuscript_version_table,
-        pipeline_cloud_resource.person_table,
-        #pipeline_cloud_resource.person_v2_table
+            pipeline_cloud_resource.manuscript_table,
+            pipeline_cloud_resource.manuscript_version_table,
+            pipeline_cloud_resource.person_table,
     ]:
         loaded_table_row_count = get_table_row_count(
             pipeline_cloud_resource.project_name,
