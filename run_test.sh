@@ -18,8 +18,8 @@ flake8 flake8  tests/ data_pipeline/ dags/
 
 pytest tests/unit_test/ -p no:cacheprovider -s --disable-warnings
 
-#echo "running dag validation tests"
-#pytest tests/dag_validation_test/ -p no:cacheprovider -s --disable-warnings
+echo "running dag validation tests"
+pytest tests/dag_validation_test/ -p no:cacheprovider -s --disable-warnings
 
 
 if [[ $1  &&  $1 == "with-end-to-end" ]]; then
