@@ -28,7 +28,14 @@ from data_pipeline.utils.dags.data_pipeline_dag_utils import (
 INITIAL_S3_XML_FILE_LAST_MODIFIED_DATE_ENV_NAME = (
     "INITIAL_S3_XML_FILE_LAST_MODIFIED_DATE"
 )
-DEFAULT_INITIAL_S3_XML_FILE_LAST_MODIFIED_DATE = "2020-04-27 21:10:13"
+S3_BUCKET_POLLING_INTERVAL_IN_MINUTES_ENV_VAR_NAME = (
+    "S3_BUCKET_POLLING_INTERVAL_IN_MINUTES"
+)
+S3_BUCKET_POLLING_TIMEOUT_IN_MINUTES_ENV_VAR_NAME = (
+    "S3_BUCKET_POLLING_TIMEOUT_IN_MINUTES"
+)
+
+DEFAULT_INITIAL_S3_XML_FILE_LAST_MODIFIED_DATE = "2020-04-25 21:10:13"
 
 DEPLOYMENT_ENV_ENV_NAME = "DEPLOYMENT_ENV"
 DEFAULT_DEPLOYMENT_ENV_VALUE = "ci"
@@ -193,9 +200,18 @@ SHOULD_REMAINING_TASK_EXECUTE = ShortCircuitOperator(
 
 
 NEW_S3_FILE_SENSOR = S3NewKeyFromLastDataDownloadDateSensor(
-    task_id='s3_key_sensor_task',
-    poke_interval=60 * 5,
-    timeout=60 * 60 * 24 * 1,
+    task_id='S3_Key_Sensor_Task',
+    poke_interval=60 * int(
+        os.getenv(
+            S3_BUCKET_POLLING_INTERVAL_IN_MINUTES_ENV_VAR_NAME, "5"
+        )
+    ),
+    timeout=60 * int(
+        os.getenv(
+            S3_BUCKET_POLLING_TIMEOUT_IN_MINUTES_ENV_VAR_NAME,
+            "120"
+        )
+    ),
     retries=0,
     state_info_extract_from_config_callable=get_stored_state,
     default_initial_s3_last_modified_date=(
@@ -214,9 +230,8 @@ LOCK_DAGRUN_UPDATE_PREVIOUS_RUNID = create_python_task(
     update_prev_run_id_var_val,
 )
 
-
 ETL_XML = create_python_task(
-    S3_XML_ETL_DAG, "Etl_XML",
+    S3_XML_ETL_DAG, "ETL_eJP_XML",
     etl_new_ejp_xml_files,
     email_on_failure=True
 )

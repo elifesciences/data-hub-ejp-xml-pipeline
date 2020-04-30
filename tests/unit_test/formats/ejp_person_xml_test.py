@@ -177,9 +177,6 @@ class TestParseXml:
         )
         assert len(result.persons) == 1
         assert result.persons[0].data['person_id'] == PERSON_ID_1
-        assert result.persons[0].modified_timestamp == parse_timestamp(
-            TIMESTAMP_1
-        )
 
     def test_should_generate_person_id_if_blank(self):
         result = _parse_xml_with_defaults(
@@ -248,9 +245,6 @@ class TestParseXml:
         )
         assert len(result.persons) == 1
         assert result.persons[0].data['person_id'] == PERSON_ID_1
-        assert result.persons[0].modified_timestamp == parse_timestamp(
-            TIMESTAMP_1
-        )
 
     def test_should_extract_memberships(self):
         result = _parse_xml_with_defaults(

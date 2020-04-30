@@ -14,8 +14,7 @@ from dags.s3_xml_import_pipeline import (
     DEPLOYMENT_ENV_ENV_NAME
 )
 from tests.end2end_test import (
-    trigger_run_test_pipeline,
-    DataPipelineCloudResource
+    trigger_run_test_pipeline
 )
 from tests.end2end_test.end_to_end_test_helper import (
     AirflowAPI
@@ -27,18 +26,6 @@ LOGGER = logging.getLogger(__name__)
 
 def test_dag_runs_data_imported():
     airflow_api = AirflowAPI()
-
-    data_pipeline_cloud_resource = (
-        get_data_pipeline_cloud_resource()
-    )
-    trigger_run_test_pipeline(
-        airflow_api,
-        DAG_ID,
-        data_pipeline_cloud_resource
-    )
-
-
-def get_data_pipeline_cloud_resource():
     conf_file_path = os.getenv(
         named_literals.EJP_XML_CONFIG_FILE_PATH_ENV_NAME
     )
@@ -50,13 +37,8 @@ def get_data_pipeline_cloud_resource():
         data_config_dict, dep_env
     )
 
-    return DataPipelineCloudResource(
-        ejp_xml_etl_config.gcp_project,
-        ejp_xml_etl_config.dataset,
-        ejp_xml_etl_config.manuscript_table,
-        ejp_xml_etl_config.manuscript_version_table,
-        ejp_xml_etl_config.person_table,
-        ejp_xml_etl_config.person_v2_table,
-        ejp_xml_etl_config.state_file_bucket,
-        ejp_xml_etl_config.state_file_object
+    trigger_run_test_pipeline(
+        airflow_api,
+        DAG_ID,
+        ejp_xml_etl_config
     )

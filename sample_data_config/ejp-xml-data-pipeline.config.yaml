@@ -1,12 +1,12 @@
 gcpProjectName: 'elife-data-pipeline'
 dataPipelineId: ejp_xml_pipeline_id
 dataset: '{ENV}'
-manuscriptTable: manuscript_table_test
-manuscriptVersionTable: manuscript_version_table_test
-personTable: person_table_test
-personVersion2Table: person_version2_table_test
+manuscriptTable: 'manuscript_{ENV}'
+manuscriptVersionTable: 'manuscript_version_{ENV}'
+personTable: 'person_{ENV}'
+personVersion2Table: 'person_v2_{ENV}'
 eJPXmlBucket: 'ci-elife-data-pipeline'
 eJPXmlObjectKeyPattern: 'airflow_test/ejp-xml-test-data/ejp_elife_*'
 stateFile:
   bucket: '{ENV}-elife-data-pipeline'
-  object: 'airflow-config/ejp-xml/{ENV}-ejp-xml-processing-state-test.json'
+  object: 'airflow-config/ejp-xml/{ENV}-ejp-xml-processing-state-test_k.json'

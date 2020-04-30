@@ -19,8 +19,8 @@ def test_target_dag_should_contain_four_tasks(dagbag):
         (DAG_ID,
          ['Should_Remaining_Tasks_Execute',
           'Update_Previous_RunID_Variable_Value_For_DagRun_Locking',
-          's3_key_sensor_task',
-          'Etl_XML'
+          'S3_Key_Sensor_Task',
+          'ETL_eJP_XML'
           ])
     ],
 )

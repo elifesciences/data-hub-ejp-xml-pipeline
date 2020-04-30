@@ -3,7 +3,6 @@ import logging
 import pytest
 
 
-@pytest.fixture(autouse=True)
-def configure_logging():
-    logging.root.handlers = []
+@pytest.fixture(scope='session', autouse=True)
+def setup_logging():
     logging.basicConfig(level='DEBUG')

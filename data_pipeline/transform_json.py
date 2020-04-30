@@ -8,10 +8,8 @@ def remove_key_with_null_value(record):
                 remove_key_with_null_value(val)
 
     elif isinstance(record, list):
-        for index, val in enumerate(record):
+        for val in record:
             if isinstance(val, (dict, list)):
                 remove_key_with_null_value(val)
-            else:
-                if val:
-                    record[index] = val
+
     return record
