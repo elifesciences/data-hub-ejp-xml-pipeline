@@ -3,10 +3,10 @@ import logging
 from tests.end2end_test.end_to_end_test_helper import (
     simple_query
 )
-from data_pipeline.data_store.s3_data_service import (
+from ejp_xml_pipeline.data_store.s3_data_service import (
     delete_s3_object
 )
-from data_pipeline.dag_pipeline_config.xml_config import eJPXmlDataConfig
+from ejp_xml_pipeline.dag_pipeline_config.xml_config import eJPXmlDataConfig
 LOGGER = logging.getLogger(__name__)
 
 

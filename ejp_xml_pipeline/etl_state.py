@@ -1,11 +1,11 @@
 import json
 
 from botocore.exceptions import ClientError
-from data_pipeline.dag_pipeline_config.xml_config import eJPXmlDataConfig
-from data_pipeline.data_store.s3_data_service import (
+from ejp_xml_pipeline.dag_pipeline_config.xml_config import eJPXmlDataConfig
+from ejp_xml_pipeline.data_store.s3_data_service import (
     download_s3_json_object, upload_s3_object
 )
-from data_pipeline.utils.xml_transform_util.timestamp import (
+from ejp_xml_pipeline.utils.xml_transform_util.timestamp import (
     convert_datetime_string_to_datetime, convert_datetime_to_string
 )
 

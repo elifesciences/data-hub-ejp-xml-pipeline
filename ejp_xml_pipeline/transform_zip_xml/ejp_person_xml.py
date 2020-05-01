@@ -7,16 +7,16 @@ from typing import List
 from lxml import etree
 from lxml.etree import Element
 
-from data_pipeline.utils.xml_transform_util.xml import (
+from ejp_xml_pipeline.utils.xml_transform_util.xml import (
     get_and_decode_xml_child_text, get_and_decode_xml_text
 )
-from data_pipeline.utils.xml_transform_util.timestamp import (
+from ejp_xml_pipeline.utils.xml_transform_util.timestamp import (
     format_to_iso_timestamp
 )
-from data_pipeline.model.entities import PersonV2
+from ejp_xml_pipeline.model.entities import PersonV2
 
-from data_pipeline.transform_zip_xml.parsed_document import ParsedDocument
-from data_pipeline.utils.xml_transform_util.extract import (
+from ejp_xml_pipeline.transform_zip_xml.parsed_document import ParsedDocument
+from ejp_xml_pipeline.utils.xml_transform_util.extract import (
     extract_list, format_optional_to_iso_timestamp
 )
 

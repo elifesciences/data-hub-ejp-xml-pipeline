@@ -5,12 +5,12 @@ from typing import List
 from lxml.builder import E
 from lxml.etree import Element
 
-from data_pipeline.utils.xml_transform_util.timestamp import (
+from ejp_xml_pipeline.utils.xml_transform_util.timestamp import (
     parse_timestamp, to_default_tz_display_format
 )
 
-from data_pipeline.utils.xml_transform_util.extract import MemberTypes
-from data_pipeline.transform_zip_xml.ejp_manuscript_xml import (
+from ejp_xml_pipeline.utils.xml_transform_util.extract import MemberTypes
+from ejp_xml_pipeline.transform_zip_xml.ejp_manuscript_xml import (
     derive_version_id_from_manuscript_id_and_created_timestamp,
     parse_xml,
     OverallStageNames,

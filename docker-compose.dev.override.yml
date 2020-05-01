@@ -6,17 +6,22 @@ services:
             - "8080:8080"
         volumes:
             - ~/.config/gcloud/application_default_credentials.json:/tmp/credentials.json
-
+            - ~/.aws/credentials:/usr/local/airflow/.aws/credentials
 
     scheduler:
         volumes:
             - ~/.config/gcloud/application_default_credentials.json:/tmp/credentials.json
-
+            - ~/.aws/credentials:/usr/local/airflow/.aws/credentials
 
     dask-worker:
         volumes:
             - ~/.config/gcloud/application_default_credentials.json:/tmp/credentials.json
+            - ~/.aws/credentials:/usr/local/airflow/.aws/credentials
+            - ./sample_data_config/ci-ejp-xml-data-pipeline.config.yaml:/usr/local/airflow/app-config/ejp-xml/ejp-xml-data-pipeline.config.yaml
+
 
     test-client:
         volumes:
             - ~/.config/gcloud/application_default_credentials.json:/tmp/credentials.json
+            - ./sample_data_config/ci-ejp-xml-data-pipeline.config.yaml:/usr/local/airflow/app-config/ejp-xml/ejp-xml-data-pipeline.config.yaml
+            - ~/.aws/credentials:/usr/local/airflow/.aws/credentials

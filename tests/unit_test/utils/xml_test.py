@@ -1,7 +1,7 @@
 # pylint: disable=no-name-in-module
 from lxml.builder import E
 
-from data_pipeline.utils.xml_transform_util.xml import (
+from ejp_xml_pipeline.utils.xml_transform_util.xml import (
     decode_html_entities,
     get_and_decode_xml_child_text
 )

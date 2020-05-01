@@ -1,6 +1,6 @@
 from datetime import datetime, timezone
 
-from data_pipeline.utils.xml_transform_util.timestamp import (
+from ejp_xml_pipeline.utils.xml_transform_util.timestamp import (
     parse_timestamp,
     to_timestamp,
     format_to_iso_timestamp,

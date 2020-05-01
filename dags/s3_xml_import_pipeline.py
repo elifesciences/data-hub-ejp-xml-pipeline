@@ -6,21 +6,24 @@ from airflow.models import Variable
 from airflow.models.dagrun import DagRun
 from airflow.operators.python_operator import ShortCircuitOperator
 
-from data_pipeline.dag_pipeline_config.xml_config import eJPXmlDataConfig
-from data_pipeline.etl_state import get_stored_state
-from data_pipeline.etl import (
+from ejp_xml_pipeline.dag_pipeline_config.xml_config import eJPXmlDataConfig
+from ejp_xml_pipeline.etl_state import get_stored_state
+from ejp_xml_pipeline.etl import (
     etl_ejp_xml_zip,
 )
-from data_pipeline.utils import (
+from ejp_xml_pipeline.utils import (
     NamedDataPipelineLiterals as named_literals,
     get_yaml_file_as_dict
 )
-from data_pipeline.etl_state import update_state, update_object_latest_dates
-from data_pipeline.utils.dags.airflow_s3_util_extension import (
+from ejp_xml_pipeline.etl_state import (
+    update_state,
+    update_object_latest_dates
+)
+from ejp_xml_pipeline.utils.dags.airflow_s3_util_extension import (
     S3NewKeyFromLastDataDownloadDateSensor,
     S3HookNewFileMonitor
 )
-from data_pipeline.utils.dags.data_pipeline_dag_utils import (
+from ejp_xml_pipeline.utils.dags.data_pipeline_dag_utils import (
     get_default_args,
     create_python_task
 )

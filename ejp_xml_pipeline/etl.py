@@ -8,13 +8,13 @@ from contextlib import ExitStack
 from tempfile import TemporaryDirectory
 from zipfile import ZipFile
 
-from data_pipeline.data_store.s3_data_service import s3_open_binary_read
-from data_pipeline.transform_zip_xml.ejp_zip import (
+from ejp_xml_pipeline.data_store.s3_data_service import s3_open_binary_read
+from ejp_xml_pipeline.transform_zip_xml.ejp_zip import (
     iter_parse_xml_in_zip,
 )
-from data_pipeline.transform_json import remove_key_with_null_value
-from data_pipeline.dag_pipeline_config.xml_config import eJPXmlDataConfig
-from data_pipeline.data_store.bq_data_service import (
+from ejp_xml_pipeline.transform_json import remove_key_with_null_value
+from ejp_xml_pipeline.dag_pipeline_config.xml_config import eJPXmlDataConfig
+from ejp_xml_pipeline.data_store.bq_data_service import (
     load_file_into_bq, create_or_extend_table_schema
 )
 

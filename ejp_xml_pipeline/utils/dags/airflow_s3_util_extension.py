@@ -9,8 +9,8 @@ from airflow.hooks.S3_hook import S3Hook
 from airflow.sensors.base_sensor_operator import BaseSensorOperator
 from airflow.utils.decorators import apply_defaults
 
-from data_pipeline.dag_pipeline_config.xml_config import eJPXmlDataConfig
-from data_pipeline.utils import (
+from ejp_xml_pipeline.dag_pipeline_config.xml_config import eJPXmlDataConfig
+from ejp_xml_pipeline.utils import (
     NamedDataPipelineLiterals as NamedLiterals,
     get_yaml_file_as_dict
 )

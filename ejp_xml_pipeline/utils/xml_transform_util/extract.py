@@ -2,7 +2,7 @@ from typing import Callable, List
 # pylint: disable=no-name-in-module
 from lxml.etree import Element
 
-from data_pipeline.utils.xml_transform_util.timestamp import (
+from ejp_xml_pipeline.utils.xml_transform_util.timestamp import (
     format_to_iso_timestamp
 )
 

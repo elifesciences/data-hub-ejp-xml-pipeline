@@ -6,11 +6,11 @@ from lxml import etree
 from lxml.builder import E
 from lxml.etree import Element
 
-from data_pipeline.utils.xml_transform_util.timestamp import parse_timestamp
+from ejp_xml_pipeline.utils.xml_transform_util.timestamp import parse_timestamp
 
-from data_pipeline.utils.xml_transform_util.extract import MemberTypes
+from ejp_xml_pipeline.utils.xml_transform_util.extract import MemberTypes
 
-from data_pipeline.transform_zip_xml.ejp_person_xml import (
+from ejp_xml_pipeline.transform_zip_xml.ejp_person_xml import (
     generate_person_id,
     has_generated_person_id,
     parse_xml

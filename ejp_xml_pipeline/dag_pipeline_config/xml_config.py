@@ -1,6 +1,6 @@
 import os
 from pathlib import Path
-from data_pipeline.model.entities import (
+from ejp_xml_pipeline.model.entities import (
     ManuscriptVersion,
     PersonV2,
     Person,

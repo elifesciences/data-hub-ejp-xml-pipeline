@@ -3,15 +3,15 @@ from datetime import datetime
 # pylint: disable=no-name-in-module
 from lxml.etree import Element
 
-from data_pipeline.transform_zip_xml.parsed_document import (
+from ejp_xml_pipeline.transform_zip_xml.parsed_document import (
     ParsedDocument, ParseDocumentError
 )
 
-from data_pipeline.transform_zip_xml.ejp_manuscript_xml import (
+from ejp_xml_pipeline.transform_zip_xml.ejp_manuscript_xml import (
     parse_xml as parse_manuscript_xml,
     is_manuscript_xml
 )
-from data_pipeline.transform_zip_xml.ejp_person_xml import (
+from ejp_xml_pipeline.transform_zip_xml.ejp_person_xml import (
     parse_xml as parse_person_xml,
     is_person_xml
 )

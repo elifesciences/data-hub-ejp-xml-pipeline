@@ -9,14 +9,14 @@ import pytest
 from lxml.builder import E
 from lxml import etree
 
-from data_pipeline.utils.xml_transform_util.timestamp import (
+from ejp_xml_pipeline.utils.xml_transform_util.timestamp import (
     parse_timestamp, format_to_iso_timestamp
 )
 
 # pylint: disable=c-extension-no-member
 
-import data_pipeline.transform_zip_xml.ejp_zip
-from data_pipeline.transform_zip_xml.ejp_zip import (
+import ejp_xml_pipeline.transform_zip_xml.ejp_zip
+from ejp_xml_pipeline.transform_zip_xml.ejp_zip import (
     parse_go_xml,
     iter_parse_xml_in_zip,
     join_zip_and_xml_filename
@@ -34,13 +34,13 @@ PROVENANCE_1 = dict(source_filename='dummy.xml')
 
 @pytest.fixture(name='parse_xml_mock')
 def _parse_xml_mock():
-    with patch.object(data_pipeline.transform_zip_xml.ejp_zip, 'parse_xml') as mock:
+    with patch.object(ejp_xml_pipeline.transform_zip_xml.ejp_zip, 'parse_xml') as mock:
         yield mock
 
 
 @pytest.fixture(name='datetime_mock')
 def _datetime_mock():
-    with patch.object(data_pipeline.transform_zip_xml.ejp_zip, 'datetime') as mock:
+    with patch.object(ejp_xml_pipeline.transform_zip_xml.ejp_zip, 'datetime') as mock:
         yield mock
 
 

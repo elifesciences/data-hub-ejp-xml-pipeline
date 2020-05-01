@@ -1,8 +1,8 @@
 import os
 import logging
 
-from data_pipeline.utils import get_yaml_file_as_dict
-from data_pipeline.dag_pipeline_config.xml_config import (
+from ejp_xml_pipeline.utils import get_yaml_file_as_dict
+from ejp_xml_pipeline.dag_pipeline_config.xml_config import (
     eJPXmlDataConfig
 )
 from dags.s3_xml_import_pipeline import (

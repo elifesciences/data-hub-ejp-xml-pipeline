@@ -4,10 +4,10 @@ import pytest
 # pylint: disable=no-name-in-module
 from lxml.builder import E
 
-from data_pipeline.utils.xml_transform_util.timestamp import parse_timestamp
+from ejp_xml_pipeline.utils.xml_transform_util.timestamp import parse_timestamp
 
-from data_pipeline.transform_zip_xml import ejp_xml
-from data_pipeline.transform_zip_xml.ejp_xml import parse_xml, ParseDocumentError
+from ejp_xml_pipeline.transform_zip_xml import ejp_xml
+from ejp_xml_pipeline.transform_zip_xml.ejp_xml import parse_xml, ParseDocumentError
 
 
 from .ejp_manuscript_xml_test import _manuscript_xml

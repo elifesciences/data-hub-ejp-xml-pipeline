@@ -7,21 +7,21 @@ from typing import Tuple
 # pylint: disable=no-name-in-module
 from lxml.etree import Element
 
-from data_pipeline.utils.xml_transform_util.xml import (
+from ejp_xml_pipeline.utils.xml_transform_util.xml import (
     get_and_decode_xml_child_text
 )
-from data_pipeline.utils.xml_transform_util.timestamp import (
+from ejp_xml_pipeline.utils.xml_transform_util.timestamp import (
     format_to_iso_timestamp
 )
-from data_pipeline.transform_zip_xml.parsed_document import ParsedDocument
+from ejp_xml_pipeline.transform_zip_xml.parsed_document import ParsedDocument
 
-from data_pipeline.model.entities import (
+from ejp_xml_pipeline.model.entities import (
     Person,
     Manuscript,
     ManuscriptVersion
 )
 
-from data_pipeline.utils.xml_transform_util.extract import (
+from ejp_xml_pipeline.utils.xml_transform_util.extract import (
     format_optional_to_iso_timestamp, extract_list
 )
 

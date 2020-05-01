@@ -19,7 +19,7 @@ RUN if [ "${install_dev}" = "y" ]; then pip install --user -r requirements.dev.t
 
 ENV PATH /usr/local/airflow/.local/bin:$PATH
 
-COPY --chown=airflow:airflow data_pipeline ./data_pipeline
+COPY --chown=airflow:airflow ejp_xml_pipeline ./ejp_xml_pipeline
 COPY --chown=airflow:airflow dags ./dags
 COPY --chown=airflow:airflow setup.py ./setup.py
 RUN pip install -e . --user --no-dependencies

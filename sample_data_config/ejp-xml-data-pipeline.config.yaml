@@ -9,4 +9,4 @@ eJPXmlBucket: 'ci-elife-data-pipeline'
 eJPXmlObjectKeyPattern: 'airflow_test/ejp-xml-test-data/ejp_elife_*'
 stateFile:
   bucket: '{ENV}-elife-data-pipeline'
-  object: 'airflow-config/ejp-xml/{ENV}-ejp-xml-processing-state-test_k.json'
+  object: 'airflow-config/ejp-xml/ejp-xml-processing-state-test.json'

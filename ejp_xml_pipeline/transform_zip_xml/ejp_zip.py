@@ -6,17 +6,17 @@ from typing import List, Iterable
 # pylint: disable=no-name-in-module
 from lxml.etree import Element, XMLParser
 
-from data_pipeline.utils.xml_transform_util\
+from ejp_xml_pipeline.utils.xml_transform_util\
     .timestamp import (
         parse_timestamp,
         format_to_iso_timestamp
     )
-from data_pipeline.utils.xml_transform_util.xml import (
+from ejp_xml_pipeline.utils.xml_transform_util.xml import (
     get_xml_text, parse_xml_and_show_error_line
 )
-from data_pipeline.transform_zip_xml.parsed_document import ParsedDocument
+from ejp_xml_pipeline.transform_zip_xml.parsed_document import ParsedDocument
 
-from data_pipeline.transform_zip_xml.ejp_xml import parse_xml
+from ejp_xml_pipeline.transform_zip_xml.ejp_xml import parse_xml
 
 LOGGER = logging.getLogger(__name__)
 
