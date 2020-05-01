@@ -1,0 +1,102 @@
+version: '3.4'
+
+x-airflow-env:
+  &airflow-env
+  - LOAD_EX=n
+  - AIRFLOW_HOST=webserver
+  - AIRFLOW_PORT=8080
+  - AIRFLOW__CORE__EXECUTOR=DaskExecutor
+  - AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@postgres:5432/airflow
+  - AIRFLOW__CORE__FERNET_KEY='81HqDtbqAywKSOumSha3BhWNOdQ26slT6K0YaZeZyPs='
+  - AIRFLOW__DASK__CLUSTER_ADDRESS=dask-scheduler:8786
+  - AIRFLOW__SMTP__SMTP_HOST=smtp-server
+  - AIRFLOW__SMTP__SMTP_STARTTLS=False
+  - AIRFLOW__SMTP__SMTP_SSL=False
+  - AIRFLOW__SMTP__SMTP_PORT=25
+  - AIRFLOW__SMTP__SMTP_MAIL_FROM=do-no-reply@domain.com
+  - GOOGLE_APPLICATION_CREDENTIALS=/usr/local/airflow/.config/gcloud/credentials.json
+  - DEPLOYMENT_ENV=ci
+  - EJP_XML_CONFIG_FILE_PATH=/usr/local/airflow/app-config/ejp-xml/ejp-xml-data-pipeline.config.yaml
+
+services:
+    data-hub-dags:
+        environment:
+            GOOGLE_APPLICATION_CREDENTIALS: /tmp/credentials.json
+        build:
+            context: .
+        image: elifesciences/data-hub-core-dags
+        command: ''
+
+    data-hub-dags-dev:
+        build:
+            context: .
+            dockerfile: Dockerfile
+            args:
+                install_dev: y
+        image:  elifesciences/data-hub-core-dags-dev
+        command: /bin/sh -c exit 0
+        entrypoint: []
+
+    webserver:
+        depends_on:
+            - postgres
+            - dask-worker
+            - dask-scheduler
+        environment: *airflow-env
+        image:  elifesciences/data-hub-core-dags-dev
+        entrypoint: /entrypoint.sh
+        command: webserver
+
+    smtp-server:
+        restart: always
+        image:  namshi/smtp
+        ports:
+            - "25:25"
+
+    scheduler:
+        image:  elifesciences/data-hub-core-dags-dev
+        depends_on:
+            - webserver
+        environment: *airflow-env
+        entrypoint: /entrypoint.sh
+        command: scheduler
+
+    test-client:
+        image:  elifesciences/data-hub-core-dags-dev
+        depends_on:
+            - scheduler
+        environment: *airflow-env
+        command: >
+            bash -c "sudo install -D /tmp/credentials.json -m 644 -t  /usr/local/airflow/.config/gcloud
+            && ./run_test.sh with-end-to-end"
+
+    postgres:
+        image: postgres:9.6
+        environment:
+            - POSTGRES_USER=airflow
+            - POSTGRES_PASSWORD=airflow
+            - POSTGRES_DB=airflow
+        healthcheck:
+            test: ["CMD-SHELL", "pg_isready -U postgres"]
+            interval: 5s
+            timeout: 5s
+            retries: 5
+
+    dask-scheduler:
+        environment: *airflow-env
+        image: elifesciences/data-hub-core-dags-dev
+        hostname: dask-scheduler
+        entrypoint: [ ]
+        command: ["dask-scheduler"]
+
+    dask-worker:
+        environment: *airflow-env
+        depends_on:
+          - dask-scheduler
+          - smtp-server
+        image: elifesciences/data-hub-core-dags-dev
+        hostname: dask-worker
+        entrypoint: []
+        command: >
+            bash -c "sudo install -D /tmp/credentials.json -m 644 -t  /usr/local/airflow/.config/gcloud
+            && ./worker.sh tcp://dask-scheduler:8786"
