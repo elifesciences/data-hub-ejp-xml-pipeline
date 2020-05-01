@@ -110,8 +110,8 @@ def wait_till_triggered_dag_run_ends(
 
 class TestQueryTemplate:
     CLEAN_TABLE_QUERY = """
-    Delete from `{project}.{dataset}.{table}` where true
+    DELETE FROM `{project}.{dataset}.{table}` WHERE true
     """
     READ_COUNT_TABLE_QUERY = """
-    Select Count(*) AS count from `{project}.{dataset}.{table}`
+    SELECT COUNT(*) AS count FROM `{project}.{dataset}.{table}`
     """

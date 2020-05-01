@@ -22,9 +22,6 @@ services:
     data-hub-dags:
         environment:
             GOOGLE_APPLICATION_CREDENTIALS: /tmp/credentials.json
-        volumes:
-            - ./credentials.json:/tmp/credentials.json
-            - ~/.aws/credentials:/usr/local/airflow/.aws/credentials
         build:
             context: .
         image: elifesciences/data-hub-core-dags
@@ -69,10 +66,6 @@ services:
         depends_on:
             - scheduler
         environment: *airflow-env
-        volumes:
-            - ./sample_data_config/ejp-xml-data-pipeline.config.yaml:/usr/local/airflow/app-config/ejp-xml/ejp-xml-data-pipeline.config.yaml
-            - ./credentials.json:/tmp/credentials.json
-            - ~/.aws/credentials:/usr/local/airflow/.aws/credentials
         command: >
             bash -c "sudo install -D /tmp/credentials.json -m 644 -t  /usr/local/airflow/.config/gcloud
             && ./run_test.sh with-end-to-end"
@@ -101,10 +94,6 @@ services:
         depends_on:
           - dask-scheduler
           - smtp-server
-        volumes:
-            - ./sample_data_config/ejp-xml-data-pipeline.config.yaml:/usr/local/airflow/app-config/ejp-xml/ejp-xml-data-pipeline.config.yaml
-            - ./credentials.json:/tmp/credentials.json
-            - ~/.aws/credentials:/usr/local/airflow/.aws/credentials
         image: elifesciences/data-hub-core-dags-dev
         hostname: dask-worker
         entrypoint: []
