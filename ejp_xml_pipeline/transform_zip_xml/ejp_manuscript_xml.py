@@ -52,7 +52,7 @@ class ParsedManuscriptDocument(ParsedDocument):
         return self.persons + [self.manuscript] + self.versions
 
 
-MANUSCRIPT_NO_REGEX = re.compile(r'^.*-(\d{3,})\D?.*$')
+MANUSCRIPT_NO_REGEX = re.compile(r'^.*\D-(\d{3,})\D?.*$')
 
 
 def to_bool(bool_str):
@@ -67,13 +67,20 @@ def to_int(int_str):
     return int(int_str) if int_str else None
 
 
-def manuscript_number_to_manuscript_id(manuscript_number):
+def manuscript_number_to_manuscript_id(manuscript_number: str) -> str:
     LOGGER.debug('manuscript_number: %s', manuscript_number)
+    if not manuscript_number.strip():
+        raise ValueError('manuscript number must not be empty')
     match = MANUSCRIPT_NO_REGEX.match(manuscript_number)
     if not match:
-        raise ValueError(
-            'unrecognised manuscript-number format: %s' % manuscript_number
+        LOGGER.warning(
+            ' '.join([
+                'unrecognised manuscript-number format: %s'
+                '(falling back to full manuscript number)'
+            ]),
+            manuscript_number
         )
+        return manuscript_number
     return match.group(1)
 
 

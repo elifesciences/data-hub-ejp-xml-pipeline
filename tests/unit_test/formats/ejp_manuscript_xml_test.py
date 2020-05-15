@@ -5,12 +5,15 @@ from typing import List
 from lxml.builder import E
 from lxml.etree import Element
 
+import pytest
+
 from ejp_xml_pipeline.utils.xml_transform_util.timestamp import (
     parse_timestamp, to_default_tz_display_format
 )
 
 from ejp_xml_pipeline.utils.xml_transform_util.extract import MemberTypes
 from ejp_xml_pipeline.transform_zip_xml.ejp_manuscript_xml import (
+    manuscript_number_to_manuscript_id,
     derive_version_id_from_manuscript_id_and_created_timestamp,
     parse_xml,
     OverallStageNames,
@@ -174,6 +177,25 @@ def _manuscript_xml(
 
 def _versions_prop(versions, key):
     return [v.data[key] for v in versions]
+
+
+class TestManuscriptNumberToManuscriptId:
+    def test_should_reject_empty_manuscript_number(self):
+        with pytest.raises(ValueError):
+            manuscript_number_to_manuscript_id('')
+
+    def test_should_reject_blank_manuscript_number(self):
+        with pytest.raises(ValueError):
+            manuscript_number_to_manuscript_id(' ')
+
+    def test_should_extract_elife_manuscript_id(self):
+        assert manuscript_number_to_manuscript_id('2020-01-02-RA-eLife-12345') == '12345'
+
+    def test_should_use_full_manuscript_number_if_not_elife_format(self):
+        assert manuscript_number_to_manuscript_id('123-12') == '123-12'
+
+    def test_should_use_full_manuscript_number_if_not_elife_format_but_long_digits(self):
+        assert manuscript_number_to_manuscript_id('123-12345') == '123-12345'
 
 
 class TestDeriveVersionIdFromManuscriptIdAndCreatedTimestamp:
