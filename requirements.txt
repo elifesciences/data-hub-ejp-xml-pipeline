@@ -1,6 +1,6 @@
 lxml==4.5.0
 python-dateutil==2.8.1
-pytz==2019.3
+pytz==2020.1
 boto3==1.12.47
 bigquery-schema-generator==1.0
 apache-airflow[crypto,celery,postgres,hive,jdbc,ssh]==1.10.10
