@@ -30,15 +30,18 @@ dev-install:
 dev-venv: venv-create dev-install
 
 dev-flake8:
-	$(PYTHON) -m flake8 data_pipeline dags tests
+	$(PYTHON) -m flake8 ejp_xml_pipeline dags tests
 
 dev-pylint:
-	$(PYTHON) -m pylint data_pipeline dags tests
+	$(PYTHON) -m pylint ejp_xml_pipeline dags tests
 
 dev-lint: dev-flake8 dev-pylint
 
 dev-unittest:
 	$(PYTHON) -m pytest -p no:cacheprovider $(ARGS) tests/unit_test
+
+dev-watch:
+	$(PYTHON) -m pytest_watch -- -p no:cacheprovider $(ARGS) tests/unit_test
 
 dev-dagtest:
 	$(PYTHON) -m pytest -p no:cacheprovider $(ARGS) tests/dag_validation_test
