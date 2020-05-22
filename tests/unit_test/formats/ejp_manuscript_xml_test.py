@@ -687,10 +687,10 @@ class TestParseXml:
             result = _parse_xml_with_defaults(
                 _manuscript_xml([_version_node({
                     **VERSION_1,
-                    'potential-referees/potential-referee': [{
-                        'potential-referee-person-id': PERSON_ID_1,
-                        'potential-referee-suggested-to-exclude': 'other',
-                        'potential-referee-suggested-to-include': 'other'
+                    'potential-reviewers/potential-reviewer': [{
+                        'potential-reviewer-person-id': PERSON_ID_1,
+                        'potential-reviewer-suggested-to-exclude': 'other',
+                        'potential-reviewer-suggested-to-include': 'other'
                     }]
                 })])
             )
