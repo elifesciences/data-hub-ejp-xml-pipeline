@@ -264,30 +264,34 @@ def author_node_to_dict(author_node: Element) -> dict:
     }
 
 
-def reviewer_node_to_dict(reviewer_node: Element) -> dict:
+def reviewer_node_to_dict(
+        reviewer_node: Element,
+        element_prefix: str) -> dict:
     return {
         'person_id': get_and_decode_xml_child_text(
-            reviewer_node, 'referee-person-id'
+            reviewer_node, element_prefix + 'person-id'
         ),
         'sequence': to_int(get_and_decode_xml_child_text(
-            reviewer_node, 'referee-sequence'
+            reviewer_node, element_prefix + 'sequence'
         )),
         'started_timestamp': format_optional_to_iso_timestamp(
             get_and_decode_xml_child_text(
-                reviewer_node, 'referee-started-date'
+                reviewer_node, element_prefix + 'started-date'
             )
         ),
         'due_timestamp': format_optional_to_iso_timestamp(
-            get_and_decode_xml_child_text(reviewer_node, 'referee-due-date')
+            get_and_decode_xml_child_text(
+                reviewer_node, element_prefix + 'due-date'
+            )
         ),
         'next_chase_timestamp': format_optional_to_iso_timestamp(
             get_and_decode_xml_child_text(
-                reviewer_node, 'referee-next-chase-date'
+                reviewer_node, element_prefix + 'next-chase-date'
             )
         ),
         'received_timestamp': format_optional_to_iso_timestamp(
             get_and_decode_xml_child_text(
-                reviewer_node, 'referee-received-date'
+                reviewer_node, element_prefix + 'received-date'
             )
         )
     }
@@ -480,7 +484,11 @@ def version_node_to_dict(
             version_node, 'authors/author', author_node_to_dict
         ),
         'reviewers': extract_list(
-            version_node, 'referees/referee', reviewer_node_to_dict
+            version_node, 'referees/referee',
+            partial(reviewer_node_to_dict, element_prefix='referee-')
+        ) + extract_list(
+            version_node, 'reviewers/reviewer',
+            partial(reviewer_node_to_dict, element_prefix='reviewer-')
         ),
         'reviewing_editors': extract_list(
             version_node, 'editors/editor',

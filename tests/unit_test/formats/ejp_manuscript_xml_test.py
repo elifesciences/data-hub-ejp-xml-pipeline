@@ -111,7 +111,6 @@ VERSION_1 = {
 LIST_AND_ITEM_TAG_NAME_BY_PROP = {
     'stages': ('history', 'stage'),
     'authors': ('authors', 'author'),
-    'reviewers': ('referees', 'referee'),
     'senior-editors': ('senior-editors', 'senior-editor'),
     'author-funding': ('author-funding', 'author-funding'),
     'themes': ('themes', 'theme'),
@@ -554,17 +553,40 @@ class TestParseXml:
                 'is_corresponding_author': True
             }]]
 
-        def test_should_extract_single_reviewer(self):
+        def test_should_extract_single_reviewer_from_referees_element(self):
             result = _parse_xml_with_defaults(
                 _manuscript_xml([_version_node({
                     **VERSION_1,
-                    'reviewers': [{
+                    'referees/referee': [{
                         'referee-person-id': PERSON_ID_1,
                         'referee-sequence': '1',
                         'referee-started-date': NON_ISO_TIMESTAMP_1,
                         'referee-due-date': NON_ISO_TIMESTAMP_1,
                         'referee-next-chase-date': NON_ISO_TIMESTAMP_1,
                         'referee-received-date': NON_ISO_TIMESTAMP_1
+                    }]
+                })])
+            )
+            assert _versions_prop(result.versions, 'reviewers') == [[{
+                'person_id': PERSON_ID_1,
+                'sequence': 1,
+                'started_timestamp': TIMESTAMP_1,
+                'due_timestamp': TIMESTAMP_1,
+                'next_chase_timestamp': TIMESTAMP_1,
+                'received_timestamp': TIMESTAMP_1
+            }]]
+
+        def test_should_extract_single_reviewer_from_reviewers_element(self):
+            result = _parse_xml_with_defaults(
+                _manuscript_xml([_version_node({
+                    **VERSION_1,
+                    'reviewers/reviewer': [{
+                        'reviewer-person-id': PERSON_ID_1,
+                        'reviewer-sequence': '1',
+                        'reviewer-started-date': NON_ISO_TIMESTAMP_1,
+                        'reviewer-due-date': NON_ISO_TIMESTAMP_1,
+                        'reviewer-next-chase-date': NON_ISO_TIMESTAMP_1,
+                        'reviewer-received-date': NON_ISO_TIMESTAMP_1
                     }]
                 })])
             )
