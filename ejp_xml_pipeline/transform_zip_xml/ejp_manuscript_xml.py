@@ -514,6 +514,10 @@ def version_node_to_dict(
             version_node, 'potential-reviewing-editors/potential-reviewing-editor',
             partial(potential_person_node_to_dict, element_prefix='potential-reviewing-editor-')
         ),
+        'potential_senior_editors': extract_list(
+            version_node, 'potential-senior-editors/potential-senior-editor',
+            partial(potential_person_node_to_dict, element_prefix='potential-senior-editor-')
+        ),
         'author_funding': extract_list(
             version_node, 'author-funding/author-funding',
             author_funding_node_to_dict
