@@ -649,7 +649,7 @@ class TestParseXml:
                 'assigned_timestamp': TIMESTAMP_1
             }]]
 
-        def test_should_extract_single_potential_reviewer(self):
+        def test_should_extract_single_potential_reviewer_from_potential_referees_element(self):
             result = _parse_xml_with_defaults(
                 _manuscript_xml([_version_node({
                     **VERSION_1,
@@ -657,6 +657,23 @@ class TestParseXml:
                         'potential-referee-person-id': PERSON_ID_1,
                         'potential-referee-suggested-to-exclude': 'yes',
                         'potential-referee-suggested-to-include': 'no'
+                    }]
+                })])
+            )
+            assert _versions_prop(result.versions, 'potential_reviewers') == [[{
+                'person_id': PERSON_ID_1,
+                'suggested_to_exclude': True,
+                'suggested_to_include': False
+            }]]
+
+        def test_should_extract_single_potential_reviewer_from_potential_reviewers_element(self):
+            result = _parse_xml_with_defaults(
+                _manuscript_xml([_version_node({
+                    **VERSION_1,
+                    'potential-reviewers/potential-reviewer': [{
+                        'potential-reviewer-person-id': PERSON_ID_1,
+                        'potential-reviewer-suggested-to-exclude': 'yes',
+                        'potential-reviewer-suggested-to-include': 'no'
                     }]
                 })])
             )

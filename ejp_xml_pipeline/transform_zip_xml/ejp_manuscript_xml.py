@@ -341,16 +341,18 @@ def _parse_yes_no(yes_no):
     return None
 
 
-def potential_reviewer_node_to_dict(potential_reviewer_node: Element) -> dict:
+def potential_reviewer_node_to_dict(
+        potential_reviewer_node: Element,
+        element_prefix: str) -> dict:
     return {
         'person_id': get_and_decode_xml_child_text(
-            potential_reviewer_node, 'potential-referee-person-id'
+            potential_reviewer_node, element_prefix + 'person-id'
         ),
         'suggested_to_include': _parse_yes_no(get_and_decode_xml_child_text(
-            potential_reviewer_node, 'potential-referee-suggested-to-include'
+            potential_reviewer_node, element_prefix + 'suggested-to-include'
         )),
         'suggested_to_exclude': _parse_yes_no(get_and_decode_xml_child_text(
-            potential_reviewer_node, 'potential-referee-suggested-to-exclude'
+            potential_reviewer_node, element_prefix + 'suggested-to-exclude'
         ))
     }
 
@@ -503,7 +505,10 @@ def version_node_to_dict(
         ),
         'potential_reviewers': extract_list(
             version_node, 'potential-referees/potential-referee',
-            potential_reviewer_node_to_dict
+            partial(potential_reviewer_node_to_dict, element_prefix='potential-referee-')
+        ) + extract_list(
+            version_node, 'potential-reviewers/potential-reviewer',
+            partial(potential_reviewer_node_to_dict, element_prefix='potential-reviewer-')
         ),
         'author_funding': extract_list(
             version_node, 'author-funding/author-funding',
