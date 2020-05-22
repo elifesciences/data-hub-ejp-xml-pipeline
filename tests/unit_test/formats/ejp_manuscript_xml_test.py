@@ -112,7 +112,6 @@ LIST_AND_ITEM_TAG_NAME_BY_PROP = {
     'stages': ('history', 'stage'),
     'authors': ('authors', 'author'),
     'reviewers': ('referees', 'referee'),
-    'reviewing-editors': ('editors', 'editor'),
     'senior-editors': ('senior-editors', 'senior-editor'),
     'author-funding': ('author-funding', 'author-funding'),
     'themes': ('themes', 'theme'),
@@ -578,14 +577,32 @@ class TestParseXml:
                 'received_timestamp': TIMESTAMP_1
             }]]
 
-        def test_should_extract_single_reviewing_editor(self):
+        def test_should_extract_single_reviewing_editor_from_editors_element(self):
             result = _parse_xml_with_defaults(
                 _manuscript_xml([_version_node({
                     **VERSION_1,
-                    'reviewing-editors': [{
+                    'editors/editor': [{
                         'editor-person-id': PERSON_ID_1,
                         'editor-assigned-date': NON_ISO_TIMESTAMP_1,
                         'editor-decision-due-date': NON_ISO_TIMESTAMP_1,
+                    }]
+                })])
+            )
+            assert _versions_prop(result.versions, 'reviewing_editors') == [[{
+                'person_id': PERSON_ID_1,
+                'assigned_timestamp': TIMESTAMP_1,
+                'due_timestamp': TIMESTAMP_1
+            }]]
+
+        def test_should_extract_single_reviewing_editor_from_reviewing_editors_element(
+                self):
+            result = _parse_xml_with_defaults(
+                _manuscript_xml([_version_node({
+                    **VERSION_1,
+                    'reviewing-editors/reviewing-editor': [{
+                        'reviewing-editor-person-id': PERSON_ID_1,
+                        'reviewing-editor-assigned-date': NON_ISO_TIMESTAMP_1,
+                        'reviewing-editor-decision-due-date': NON_ISO_TIMESTAMP_1,
                     }]
                 })])
             )

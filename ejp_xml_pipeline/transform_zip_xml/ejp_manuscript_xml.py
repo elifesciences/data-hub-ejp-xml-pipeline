@@ -1,6 +1,7 @@
 import os
 import logging
 from datetime import datetime
+from functools import partial
 import re
 from typing import Tuple
 
@@ -292,19 +293,24 @@ def reviewer_node_to_dict(reviewer_node: Element) -> dict:
     }
 
 
-def reviewing_editor_node_to_dict(reviewing_editor_node: Element) -> dict:
+def reviewing_editor_node_to_dict(
+        reviewing_editor_node: Element,
+        element_prefix: str) -> dict:
     return {
         'person_id': get_and_decode_xml_child_text(
-            reviewing_editor_node, 'editor-person-id'
+            reviewing_editor_node,
+            element_prefix + 'person-id'
         ),
         'assigned_timestamp': format_optional_to_iso_timestamp(
             get_and_decode_xml_child_text(
-                reviewing_editor_node, 'editor-assigned-date'
+                reviewing_editor_node,
+                element_prefix + 'assigned-date'
             )
         ),
         'due_timestamp': format_optional_to_iso_timestamp(
             get_and_decode_xml_child_text(
-                reviewing_editor_node, 'editor-decision-due-date'
+                reviewing_editor_node,
+                element_prefix + 'decision-due-date'
             )
         )
     }
@@ -477,7 +483,11 @@ def version_node_to_dict(
             version_node, 'referees/referee', reviewer_node_to_dict
         ),
         'reviewing_editors': extract_list(
-            version_node, 'editors/editor', reviewing_editor_node_to_dict
+            version_node, 'editors/editor',
+            partial(reviewing_editor_node_to_dict, element_prefix='editor-')
+        ) + extract_list(
+            version_node, 'reviewing-editors/reviewing-editor',
+            partial(reviewing_editor_node_to_dict, element_prefix='reviewing-editor-')
         ),
         'senior_editors': extract_list(
             version_node, 'senior-editors/senior-editor',
