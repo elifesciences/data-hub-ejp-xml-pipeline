@@ -700,6 +700,23 @@ class TestParseXml:
                 'suggested_to_include': None
             }]]
 
+        def test_should_extract_single_potential_reviewing_editor(self):
+            result = _parse_xml_with_defaults(
+                _manuscript_xml([_version_node({
+                    **VERSION_1,
+                    'potential-reviewing-editors/potential-reviewing-editor': [{
+                        'potential-reviewing-editor-person-id': PERSON_ID_1,
+                        'potential-reviewing-editor-suggested-to-exclude': 'yes',
+                        'potential-reviewing-editor-suggested-to-include': 'no'
+                    }]
+                })])
+            )
+            assert _versions_prop(result.versions, 'potential_reviewing_editors') == [[{
+                'person_id': PERSON_ID_1,
+                'suggested_to_exclude': True,
+                'suggested_to_include': False
+            }]]
+
         def test_should_extract_author_funding(self):
             result = _parse_xml_with_defaults(
                 _manuscript_xml([_version_node({
