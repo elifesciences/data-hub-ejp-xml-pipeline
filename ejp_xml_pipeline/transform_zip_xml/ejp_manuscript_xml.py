@@ -333,10 +333,12 @@ def senior_editor_node_to_dict(senior_editor_node: Element) -> dict:
     }
 
 
-def _parse_yes_no(yes_no):
-    if yes_no == 'yes':
+def _parse_yes_no(yes_no: str) -> bool:
+    if not yes_no:
+        return None
+    if yes_no.lower() == 'yes':
         return True
-    if yes_no == 'no':
+    if yes_no.lower() == 'no':
         return False
     return None
 

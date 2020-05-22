@@ -672,8 +672,8 @@ class TestParseXml:
                     **VERSION_1,
                     'potential-reviewers/potential-reviewer': [{
                         'potential-reviewer-person-id': PERSON_ID_1,
-                        'potential-reviewer-suggested-to-exclude': 'yes',
-                        'potential-reviewer-suggested-to-include': 'no'
+                        'potential-reviewer-suggested-to-exclude': 'Yes',
+                        'potential-reviewer-suggested-to-include': 'No'
                     }]
                 })])
             )
@@ -700,14 +700,29 @@ class TestParseXml:
                 'suggested_to_include': None
             }]]
 
+        def test_should_return_none_if_include_exclude_are_not_present(self):
+            result = _parse_xml_with_defaults(
+                _manuscript_xml([_version_node({
+                    **VERSION_1,
+                    'potential-reviewers/potential-reviewer': [{
+                        'potential-reviewer-person-id': PERSON_ID_1
+                    }]
+                })])
+            )
+            assert _versions_prop(result.versions, 'potential_reviewers') == [[{
+                'person_id': PERSON_ID_1,
+                'suggested_to_exclude': None,
+                'suggested_to_include': None
+            }]]
+
         def test_should_extract_single_potential_reviewing_editor(self):
             result = _parse_xml_with_defaults(
                 _manuscript_xml([_version_node({
                     **VERSION_1,
                     'potential-reviewing-editors/potential-reviewing-editor': [{
                         'potential-reviewing-editor-person-id': PERSON_ID_1,
-                        'potential-reviewing-editor-suggested-to-exclude': 'yes',
-                        'potential-reviewing-editor-suggested-to-include': 'no'
+                        'potential-reviewing-editor-suggested-to-exclude': 'Yes',
+                        'potential-reviewing-editor-suggested-to-include': 'No'
                     }]
                 })])
             )
@@ -723,8 +738,8 @@ class TestParseXml:
                     **VERSION_1,
                     'potential-senior-editors/potential-senior-editor': [{
                         'potential-senior-editor-person-id': PERSON_ID_1,
-                        'potential-senior-editor-suggested-to-exclude': 'yes',
-                        'potential-senior-editor-suggested-to-include': 'no'
+                        'potential-senior-editor-suggested-to-exclude': 'Yes',
+                        'potential-senior-editor-suggested-to-include': 'No'
                     }]
                 })])
             )
