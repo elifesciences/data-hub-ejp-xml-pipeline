@@ -1,6 +1,7 @@
 import os
 import logging
 from datetime import datetime
+from functools import partial
 import re
 from typing import Tuple
 
@@ -263,48 +264,57 @@ def author_node_to_dict(author_node: Element) -> dict:
     }
 
 
-def reviewer_node_to_dict(reviewer_node: Element) -> dict:
+def reviewer_node_to_dict(
+        reviewer_node: Element,
+        element_prefix: str) -> dict:
     return {
         'person_id': get_and_decode_xml_child_text(
-            reviewer_node, 'referee-person-id'
+            reviewer_node, element_prefix + 'person-id'
         ),
         'sequence': to_int(get_and_decode_xml_child_text(
-            reviewer_node, 'referee-sequence'
+            reviewer_node, element_prefix + 'sequence'
         )),
         'started_timestamp': format_optional_to_iso_timestamp(
             get_and_decode_xml_child_text(
-                reviewer_node, 'referee-started-date'
+                reviewer_node, element_prefix + 'started-date'
             )
         ),
         'due_timestamp': format_optional_to_iso_timestamp(
-            get_and_decode_xml_child_text(reviewer_node, 'referee-due-date')
+            get_and_decode_xml_child_text(
+                reviewer_node, element_prefix + 'due-date'
+            )
         ),
         'next_chase_timestamp': format_optional_to_iso_timestamp(
             get_and_decode_xml_child_text(
-                reviewer_node, 'referee-next-chase-date'
+                reviewer_node, element_prefix + 'next-chase-date'
             )
         ),
         'received_timestamp': format_optional_to_iso_timestamp(
             get_and_decode_xml_child_text(
-                reviewer_node, 'referee-received-date'
+                reviewer_node, element_prefix + 'received-date'
             )
         )
     }
 
 
-def reviewing_editor_node_to_dict(reviewing_editor_node: Element) -> dict:
+def reviewing_editor_node_to_dict(
+        reviewing_editor_node: Element,
+        element_prefix: str) -> dict:
     return {
         'person_id': get_and_decode_xml_child_text(
-            reviewing_editor_node, 'editor-person-id'
+            reviewing_editor_node,
+            element_prefix + 'person-id'
         ),
         'assigned_timestamp': format_optional_to_iso_timestamp(
             get_and_decode_xml_child_text(
-                reviewing_editor_node, 'editor-assigned-date'
+                reviewing_editor_node,
+                element_prefix + 'assigned-date'
             )
         ),
         'due_timestamp': format_optional_to_iso_timestamp(
             get_and_decode_xml_child_text(
-                reviewing_editor_node, 'editor-decision-due-date'
+                reviewing_editor_node,
+                element_prefix + 'decision-due-date'
             )
         )
     }
@@ -323,24 +333,28 @@ def senior_editor_node_to_dict(senior_editor_node: Element) -> dict:
     }
 
 
-def _parse_yes_no(yes_no):
-    if yes_no == 'yes':
+def _parse_yes_no(yes_no: str) -> bool:
+    if not yes_no:
+        return None
+    if yes_no.lower() == 'yes':
         return True
-    if yes_no == 'no':
+    if yes_no.lower() == 'no':
         return False
     return None
 
 
-def potential_reviewer_node_to_dict(potential_reviewer_node: Element) -> dict:
+def potential_person_node_to_dict(
+        potential_person_node: Element,
+        element_prefix: str) -> dict:
     return {
         'person_id': get_and_decode_xml_child_text(
-            potential_reviewer_node, 'potential-referee-person-id'
+            potential_person_node, element_prefix + 'person-id'
         ),
         'suggested_to_include': _parse_yes_no(get_and_decode_xml_child_text(
-            potential_reviewer_node, 'potential-referee-suggested-to-include'
+            potential_person_node, element_prefix + 'suggested-to-include'
         )),
         'suggested_to_exclude': _parse_yes_no(get_and_decode_xml_child_text(
-            potential_reviewer_node, 'potential-referee-suggested-to-exclude'
+            potential_person_node, element_prefix + 'suggested-to-exclude'
         ))
     }
 
@@ -474,10 +488,18 @@ def version_node_to_dict(
             version_node, 'authors/author', author_node_to_dict
         ),
         'reviewers': extract_list(
-            version_node, 'referees/referee', reviewer_node_to_dict
+            version_node, 'referees/referee',
+            partial(reviewer_node_to_dict, element_prefix='referee-')
+        ) + extract_list(
+            version_node, 'reviewers/reviewer',
+            partial(reviewer_node_to_dict, element_prefix='reviewer-')
         ),
         'reviewing_editors': extract_list(
-            version_node, 'editors/editor', reviewing_editor_node_to_dict
+            version_node, 'editors/editor',
+            partial(reviewing_editor_node_to_dict, element_prefix='editor-')
+        ) + extract_list(
+            version_node, 'reviewing-editors/reviewing-editor',
+            partial(reviewing_editor_node_to_dict, element_prefix='reviewing-editor-')
         ),
         'senior_editors': extract_list(
             version_node, 'senior-editors/senior-editor',
@@ -485,7 +507,18 @@ def version_node_to_dict(
         ),
         'potential_reviewers': extract_list(
             version_node, 'potential-referees/potential-referee',
-            potential_reviewer_node_to_dict
+            partial(potential_person_node_to_dict, element_prefix='potential-referee-')
+        ) + extract_list(
+            version_node, 'potential-reviewers/potential-reviewer',
+            partial(potential_person_node_to_dict, element_prefix='potential-reviewer-')
+        ),
+        'potential_reviewing_editors': extract_list(
+            version_node, 'potential-reviewing-editors/potential-reviewing-editor',
+            partial(potential_person_node_to_dict, element_prefix='potential-reviewing-editor-')
+        ),
+        'potential_senior_editors': extract_list(
+            version_node, 'potential-senior-editors/potential-senior-editor',
+            partial(potential_person_node_to_dict, element_prefix='potential-senior-editor-')
         ),
         'author_funding': extract_list(
             version_node, 'author-funding/author-funding',

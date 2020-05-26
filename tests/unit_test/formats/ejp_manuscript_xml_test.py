@@ -111,8 +111,6 @@ VERSION_1 = {
 LIST_AND_ITEM_TAG_NAME_BY_PROP = {
     'stages': ('history', 'stage'),
     'authors': ('authors', 'author'),
-    'reviewers': ('referees', 'referee'),
-    'reviewing-editors': ('editors', 'editor'),
     'senior-editors': ('senior-editors', 'senior-editor'),
     'author-funding': ('author-funding', 'author-funding'),
     'themes': ('themes', 'theme'),
@@ -555,11 +553,11 @@ class TestParseXml:
                 'is_corresponding_author': True
             }]]
 
-        def test_should_extract_single_reviewer(self):
+        def test_should_extract_single_reviewer_from_referees_element(self):
             result = _parse_xml_with_defaults(
                 _manuscript_xml([_version_node({
                     **VERSION_1,
-                    'reviewers': [{
+                    'referees/referee': [{
                         'referee-person-id': PERSON_ID_1,
                         'referee-sequence': '1',
                         'referee-started-date': NON_ISO_TIMESTAMP_1,
@@ -578,14 +576,55 @@ class TestParseXml:
                 'received_timestamp': TIMESTAMP_1
             }]]
 
-        def test_should_extract_single_reviewing_editor(self):
+        def test_should_extract_single_reviewer_from_reviewers_element(self):
             result = _parse_xml_with_defaults(
                 _manuscript_xml([_version_node({
                     **VERSION_1,
-                    'reviewing-editors': [{
+                    'reviewers/reviewer': [{
+                        'reviewer-person-id': PERSON_ID_1,
+                        'reviewer-sequence': '1',
+                        'reviewer-started-date': NON_ISO_TIMESTAMP_1,
+                        'reviewer-due-date': NON_ISO_TIMESTAMP_1,
+                        'reviewer-next-chase-date': NON_ISO_TIMESTAMP_1,
+                        'reviewer-received-date': NON_ISO_TIMESTAMP_1
+                    }]
+                })])
+            )
+            assert _versions_prop(result.versions, 'reviewers') == [[{
+                'person_id': PERSON_ID_1,
+                'sequence': 1,
+                'started_timestamp': TIMESTAMP_1,
+                'due_timestamp': TIMESTAMP_1,
+                'next_chase_timestamp': TIMESTAMP_1,
+                'received_timestamp': TIMESTAMP_1
+            }]]
+
+        def test_should_extract_single_reviewing_editor_from_editors_element(self):
+            result = _parse_xml_with_defaults(
+                _manuscript_xml([_version_node({
+                    **VERSION_1,
+                    'editors/editor': [{
                         'editor-person-id': PERSON_ID_1,
                         'editor-assigned-date': NON_ISO_TIMESTAMP_1,
                         'editor-decision-due-date': NON_ISO_TIMESTAMP_1,
+                    }]
+                })])
+            )
+            assert _versions_prop(result.versions, 'reviewing_editors') == [[{
+                'person_id': PERSON_ID_1,
+                'assigned_timestamp': TIMESTAMP_1,
+                'due_timestamp': TIMESTAMP_1
+            }]]
+
+        def test_should_extract_single_reviewing_editor_from_reviewing_editors_element(
+                self):
+            result = _parse_xml_with_defaults(
+                _manuscript_xml([_version_node({
+                    **VERSION_1,
+                    'reviewing-editors/reviewing-editor': [{
+                        'reviewing-editor-person-id': PERSON_ID_1,
+                        'reviewing-editor-assigned-date': NON_ISO_TIMESTAMP_1,
+                        'reviewing-editor-decision-due-date': NON_ISO_TIMESTAMP_1,
                     }]
                 })])
             )
@@ -610,7 +649,7 @@ class TestParseXml:
                 'assigned_timestamp': TIMESTAMP_1
             }]]
 
-        def test_should_extract_single_potential_reviewer(self):
+        def test_should_extract_single_potential_reviewer_from_potential_referees_element(self):
             result = _parse_xml_with_defaults(
                 _manuscript_xml([_version_node({
                     **VERSION_1,
@@ -627,14 +666,31 @@ class TestParseXml:
                 'suggested_to_include': False
             }]]
 
+        def test_should_extract_single_potential_reviewer_from_potential_reviewers_element(self):
+            result = _parse_xml_with_defaults(
+                _manuscript_xml([_version_node({
+                    **VERSION_1,
+                    'potential-reviewers/potential-reviewer': [{
+                        'potential-reviewer-person-id': PERSON_ID_1,
+                        'potential-reviewer-suggested-to-exclude': 'Yes',
+                        'potential-reviewer-suggested-to-include': 'No'
+                    }]
+                })])
+            )
+            assert _versions_prop(result.versions, 'potential_reviewers') == [[{
+                'person_id': PERSON_ID_1,
+                'suggested_to_exclude': True,
+                'suggested_to_include': False
+            }]]
+
         def test_should_return_none_if_include_exclude_are_not_yes_or_no(self):
             result = _parse_xml_with_defaults(
                 _manuscript_xml([_version_node({
                     **VERSION_1,
-                    'potential-referees/potential-referee': [{
-                        'potential-referee-person-id': PERSON_ID_1,
-                        'potential-referee-suggested-to-exclude': 'other',
-                        'potential-referee-suggested-to-include': 'other'
+                    'potential-reviewers/potential-reviewer': [{
+                        'potential-reviewer-person-id': PERSON_ID_1,
+                        'potential-reviewer-suggested-to-exclude': 'other',
+                        'potential-reviewer-suggested-to-include': 'other'
                     }]
                 })])
             )
@@ -642,6 +698,55 @@ class TestParseXml:
                 'person_id': PERSON_ID_1,
                 'suggested_to_exclude': None,
                 'suggested_to_include': None
+            }]]
+
+        def test_should_return_none_if_include_exclude_are_not_present(self):
+            result = _parse_xml_with_defaults(
+                _manuscript_xml([_version_node({
+                    **VERSION_1,
+                    'potential-reviewers/potential-reviewer': [{
+                        'potential-reviewer-person-id': PERSON_ID_1
+                    }]
+                })])
+            )
+            assert _versions_prop(result.versions, 'potential_reviewers') == [[{
+                'person_id': PERSON_ID_1,
+                'suggested_to_exclude': None,
+                'suggested_to_include': None
+            }]]
+
+        def test_should_extract_single_potential_reviewing_editor(self):
+            result = _parse_xml_with_defaults(
+                _manuscript_xml([_version_node({
+                    **VERSION_1,
+                    'potential-reviewing-editors/potential-reviewing-editor': [{
+                        'potential-reviewing-editor-person-id': PERSON_ID_1,
+                        'potential-reviewing-editor-suggested-to-exclude': 'Yes',
+                        'potential-reviewing-editor-suggested-to-include': 'No'
+                    }]
+                })])
+            )
+            assert _versions_prop(result.versions, 'potential_reviewing_editors') == [[{
+                'person_id': PERSON_ID_1,
+                'suggested_to_exclude': True,
+                'suggested_to_include': False
+            }]]
+
+        def test_should_extract_single_potential_senior_editor(self):
+            result = _parse_xml_with_defaults(
+                _manuscript_xml([_version_node({
+                    **VERSION_1,
+                    'potential-senior-editors/potential-senior-editor': [{
+                        'potential-senior-editor-person-id': PERSON_ID_1,
+                        'potential-senior-editor-suggested-to-exclude': 'Yes',
+                        'potential-senior-editor-suggested-to-include': 'No'
+                    }]
+                })])
+            )
+            assert _versions_prop(result.versions, 'potential_senior_editors') == [[{
+                'person_id': PERSON_ID_1,
+                'suggested_to_exclude': True,
+                'suggested_to_include': False
             }]]
 
         def test_should_extract_author_funding(self):
