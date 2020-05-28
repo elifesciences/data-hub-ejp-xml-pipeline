@@ -1,4 +1,5 @@
 import json
+import logging
 import os
 from datetime import timedelta
 from airflow import DAG
@@ -27,6 +28,10 @@ from ejp_xml_pipeline.utils.dags.data_pipeline_dag_utils import (
     get_default_args,
     create_python_task
 )
+
+
+LOGGER = logging.getLogger(__name__)
+
 
 INITIAL_S3_XML_FILE_LAST_MODIFIED_DATE_ENV_NAME = (
     "INITIAL_S3_XML_FILE_LAST_MODIFIED_DATE"
@@ -167,12 +172,11 @@ def etl_new_ejp_xml_files(**context):
         )
 
         for matching_file_metadata in sorted_matching_files_list:
-            etl_ejp_xml_zip(
-                data_config,
-                matching_file_metadata.get(
-                    named_literals.S3_FILE_METADATA_NAME_KEY
-                )
+            object_key = matching_file_metadata.get(
+                named_literals.S3_FILE_METADATA_NAME_KEY
             )
+            LOGGER.info('processing zip: s3://%s/%s', data_config.s3_bucket, object_key)
+            etl_ejp_xml_zip(data_config, object_key)
             updated_obj_pattern_with_latest_dates = (
                 update_object_latest_dates(
                     obj_pattern_with_latest_dates,

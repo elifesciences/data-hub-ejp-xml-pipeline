@@ -62,7 +62,6 @@ def etl_ejp_xml_zip(
         with get_opened_temp_file_for_entity_types(
                 ejp_xml_data_config, file_dir
         ) as temp_opened_file_for_entity_type:
-            LOGGER.info('processing zip: s3://%s/%s', ejp_xml_data_config.s3_bucket, object_key)
             with s3_open_binary_read(
                     bucket=ejp_xml_data_config.s3_bucket,
                     object_key=object_key
