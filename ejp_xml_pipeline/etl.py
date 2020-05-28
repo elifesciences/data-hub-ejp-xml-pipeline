@@ -58,9 +58,9 @@ def get_opened_temp_file_for_entity_types(
 def etl_ejp_xml_zip(
         ejp_xml_data_config: eJPXmlDataConfig, object_key: str
 ):
-    with TemporaryDirectory() as tmp_dir:
+    with TemporaryDirectory() as file_dir:
         with get_opened_temp_file_for_entity_types(
-                ejp_xml_data_config, tmp_dir
+                ejp_xml_data_config, file_dir
         ) as temp_opened_file_for_entity_type:
             with s3_open_binary_read(
                     bucket=ejp_xml_data_config.s3_bucket,
