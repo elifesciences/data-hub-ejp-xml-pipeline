@@ -39,11 +39,12 @@ def write_entities_in_parsed_doc_to_file(
 @contextmanager
 def get_opened_temp_file_for_entity_types(
         ejp_xml_data_config: eJPXmlDataConfig,
+        file_dir: str
 ):
-    with ExitStack() as stack, TemporaryDirectory() as tempdir:
+    with ExitStack() as stack:
         for ent_db_load_config \
                 in ejp_xml_data_config.entity_type_mapping.values():
-            ent_db_load_config.set_directory(tempdir)
+            ent_db_load_config.set_directory(file_dir)
         opened_files = {
             ent_type: stack.enter_context(
                 open(ent_conf.get_full_file_location(), "w")
@@ -57,27 +58,29 @@ def get_opened_temp_file_for_entity_types(
 def etl_ejp_xml_zip(
         ejp_xml_data_config: eJPXmlDataConfig, object_key: str
 ):
-    with get_opened_temp_file_for_entity_types(
-            ejp_xml_data_config
-    ) as temp_opened_file_for_entity_type:
-        with s3_open_binary_read(
-                bucket=ejp_xml_data_config.s3_bucket,
-                object_key=object_key
-        ) as streaming_body:
-            with io.BytesIO(streaming_body.read()) as zip_buffer:
-                zip_buffer.seek(0)
-                with ZipFile(zip_buffer, mode='r') as zip_file:
-                    parsed_documents = (
-                        iter_parse_xml_in_zip(
-                            zip_file,
-                            zip_filename=object_key,
+    with TemporaryDirectory() as tmp_dir:
+        with get_opened_temp_file_for_entity_types(
+                ejp_xml_data_config, tmp_dir
+        ) as temp_opened_file_for_entity_type:
+            with s3_open_binary_read(
+                    bucket=ejp_xml_data_config.s3_bucket,
+                    object_key=object_key
+            ) as streaming_body:
+                with io.BytesIO(streaming_body.read()) as zip_buffer:
+                    zip_buffer.seek(0)
+                    with ZipFile(zip_buffer, mode='r') as zip_file:
+                        parsed_documents = (
+                            iter_parse_xml_in_zip(
+                                zip_file,
+                                zip_filename=object_key,
+                            )
                         )
-                    )
-                    for parsed_document in parsed_documents:
-                        write_entities_in_parsed_doc_to_file(
-                            parsed_document.get_entities(),
-                            temp_opened_file_for_entity_type
-                        )
+                        for parsed_document in parsed_documents:
+                            write_entities_in_parsed_doc_to_file(
+                                parsed_document.get_entities(),
+                                temp_opened_file_for_entity_type
+                            )
+
         load_entities_file_to_bq(ejp_xml_data_config)
 
 
