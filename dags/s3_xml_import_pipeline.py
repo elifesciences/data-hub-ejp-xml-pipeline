@@ -171,11 +171,17 @@ def etl_new_ejp_xml_files(**context):
             )
         )
 
-        for matching_file_metadata in sorted_matching_files_list:
+        for object_index, matching_file_metadata in enumerate(sorted_matching_files_list):
             object_key = matching_file_metadata.get(
                 named_literals.S3_FILE_METADATA_NAME_KEY
             )
-            LOGGER.info('processing zip: s3://%s/%s', data_config.s3_bucket, object_key)
+            LOGGER.info(
+                'processing zip (%d / %d): s3://%s/%s',
+                1 + object_index,
+                len(sorted_matching_files_list),
+                data_config.s3_bucket,
+                object_key
+            )
             etl_ejp_xml_zip(data_config, object_key)
             updated_obj_pattern_with_latest_dates = (
                 update_object_latest_dates(
