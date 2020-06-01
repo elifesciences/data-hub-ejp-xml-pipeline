@@ -149,7 +149,7 @@ def load_entity_file_to_bq(
 def download_load2bq_cleanup_temp_files(
         matching_file_metadata_iter, s3_bucket: str,
         gcp_project: str, dataset: str,
-        bq_table: str, batch_size_limit: int = 5000
+        bq_table: str, batch_size_limit: int = 20000
 ):
     written_file_row_count = 0
     s3_objects_written_to_file = []
@@ -165,13 +165,14 @@ def download_load2bq_cleanup_temp_files(
                     s3_object
                 )
                 writer.write(jsonl_string)
-                written_file_row_count += sum(
-                    map(lambda x: 1 if '\n' in x else 0, jsonl_string)
+                written_file_row_count += (
+                    get_number_of_lines(jsonl_string)
                 )
                 s3_objects_written_to_file.append(
                     s3_object
                 )
                 if written_file_row_count > batch_size_limit:
+                    named_temp_file.flush()
                     load_and_delete_temp_objects(
                         gcp_project, dataset,
                         bq_table, tempfile_name,
@@ -185,6 +186,10 @@ def download_load2bq_cleanup_temp_files(
                 bq_table, tempfile_name,
                 s3_bucket, s3_objects_written_to_file
             )
+
+
+def get_number_of_lines(jsonl_string: str):
+    return len(jsonl_string.splitlines())
 
 
 def load_and_delete_temp_objects(
