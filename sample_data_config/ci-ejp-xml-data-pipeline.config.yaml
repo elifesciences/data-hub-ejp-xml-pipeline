@@ -5,8 +5,11 @@ manuscriptTable: 'sample_manuscript'
 manuscriptVersionTable: 'sample_manuscript_version_truncated'
 personTable: 'sample_person_truncated'
 personVersion2Table: 'sample_person_v2'
-eJPXmlBucket: 'ci-elife-data-pipeline'
-eJPXmlObjectKeyPattern: 'airflow_test/ejp-xml-test-data/ejp_elife_*'
+eJPXmlBucket: 'elife-ejp-ftp-db-xml-dump'
+eJPXmlObjectKeyPattern: 'ejp_eLife_*'
 stateFile:
   bucket: '{ENV}-elife-data-pipeline'
   object: 'airflow-config/ejp-xml/{ENV}-ejp-xml-processing-state-always_deleted.json'
+tempS3FileStorage:
+  bucket: '{ENV}-elife-data-pipeline'
+  objectPrefix: 'airflow-config/ejp-xml/{ENV}-temp-ejp-xml/'
