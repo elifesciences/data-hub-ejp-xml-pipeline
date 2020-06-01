@@ -52,25 +52,6 @@ def get_stored_ejp_xml_processing_state(
     }
 
 
-def get_stored_temp_ejp_json_state(
-        data_config: eJPXmlDataConfig
-):
-    try:
-        stored_state = download_s3_json_object(
-            data_config.state_file_bucket,
-            data_config.state_file_object
-        )
-    except ClientError as ex:
-        if ex.response['Error']['Code'] == 'NoSuchKey':
-            stored_state = {}
-        else:
-            raise ex
-    return {
-        k: convert_datetime_string_to_datetime(v)
-        for k, v in stored_state.items()
-    }
-
-
 def get_initial_state(
         data_config: eJPXmlDataConfig,
         latest_processed_file_date: str
