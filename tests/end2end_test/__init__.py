@@ -70,6 +70,7 @@ def trigger_run_test_pipeline(
             ejp_xml_config.dataset,
             table,
         )
+
     delete_statefile_if_exist(
         ejp_xml_config.state_file_bucket,
         ejp_xml_config.state_file_object

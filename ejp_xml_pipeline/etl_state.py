@@ -1,5 +1,6 @@
 import json
-
+from datetime import datetime
+from typing import Dict
 from botocore.exceptions import ClientError
 from ejp_xml_pipeline.dag_pipeline_config.xml_config import eJPXmlDataConfig
 from ejp_xml_pipeline.data_store.s3_data_service import (
@@ -83,8 +84,8 @@ def get_initial_state(
 def update_object_latest_dates(
         obj_pattern_with_latest_dates: dict,
         object_pattern: str,
-        file_modified_timestamp,
-):
+        file_modified_timestamp: datetime,
+) -> Dict[str, str]:
     new_obj_pattern_with_latest_dates = {
         **{key: convert_datetime_to_string(value)
            for key, value
