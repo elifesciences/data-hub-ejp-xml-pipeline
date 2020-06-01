@@ -13,10 +13,18 @@ class EntityDBLoadConfig:
             self,
             file_name: str,
             table_name,
+            s3_object_prefix: str
     ):
         self.file_name = file_name
         self.table_name = table_name
         self.file_directory = None
+        obj_name = (
+            s3_object_prefix.strip()
+            if s3_object_prefix.strip().endswith('/')
+            else s3_object_prefix.strip() + '/'
+        )
+        self.s3_object_prefix = obj_name + file_name + '/'
+        self.s3_object_wildcard_prefix = self.s3_object_prefix + '*'
 
     def set_directory(self, file_directory):
         self.file_directory = file_directory
@@ -71,22 +79,32 @@ class eJPXmlDataConfig:
         self.person_v2_table = updated_config.get(
             "personVersion2Table"
         )
+        self.temp_file_s3_bucket = updated_config.get(
+            'tempS3FileStorage', {}
+        ).get('bucket')
+        self.temp_file_s3_obj_prefix = updated_config.get(
+            'tempS3FileStorage', {}
+        ).get('objectPrefix')
         self.entity_type_mapping = {
             ManuscriptVersion: EntityDBLoadConfig(
                 ManuscriptVersion.__name__,
-                self.manuscript_version_table
+                self.manuscript_version_table,
+                self.temp_file_s3_obj_prefix
             ),
             Manuscript: EntityDBLoadConfig(
                 Manuscript.__name__,
-                self.manuscript_table
+                self.manuscript_table,
+                self.temp_file_s3_obj_prefix
             ),
             Person: EntityDBLoadConfig(
                 Person.__name__,
-                self.person_table
+                self.person_table,
+                self.temp_file_s3_obj_prefix
             ),
             PersonV2: EntityDBLoadConfig(
                 PersonV2.__name__,
-                self.person_v2_table
+                self.person_v2_table,
+                self.temp_file_s3_obj_prefix
             )
         }
 

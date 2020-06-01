@@ -4,7 +4,7 @@ from tests.end2end_test.end_to_end_test_helper import (
     simple_query
 )
 from ejp_xml_pipeline.data_store.s3_data_service import (
-    delete_s3_object
+    delete_s3_objects
 )
 from ejp_xml_pipeline.dag_pipeline_config.xml_config import eJPXmlDataConfig
 LOGGER = logging.getLogger(__name__)
@@ -33,9 +33,9 @@ def delete_statefile_if_exist(
 ):
 
     try:
-        delete_s3_object(state_file_bucket_name,
-                         state_file_object_name
-                         )
+        delete_s3_objects(state_file_bucket_name,
+                          state_file_object_name
+                          )
     except Exception:
         LOGGER.info("s3 object not deleted, may not exist")
 
@@ -70,6 +70,7 @@ def trigger_run_test_pipeline(
             ejp_xml_config.dataset,
             table,
         )
+
     delete_statefile_if_exist(
         ejp_xml_config.state_file_bucket,
         ejp_xml_config.state_file_object
