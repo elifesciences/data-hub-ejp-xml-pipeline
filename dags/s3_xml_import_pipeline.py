@@ -173,7 +173,7 @@ def etl_new_ejp_xml_files(**context):
 
 def load_temp_ejp_json_files_to_bq(**context):
     data_config = get_config()
-    batch_size_limit = 5000
+    batch_size_limit = 100000
 
     for entity_type in data_config.entity_type_mapping.values():
         obj_pattern_with_latest_date = {

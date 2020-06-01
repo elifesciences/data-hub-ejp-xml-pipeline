@@ -149,7 +149,7 @@ def load_entity_file_to_bq(
 def download_load2bq_cleanup_temp_files(
         matching_file_metadata_iter, s3_bucket: str,
         gcp_project: str, dataset: str,
-        bq_table: str, batch_size_limit: int = 20000
+        bq_table: str, batch_size_limit: int = 100000
 ):
     written_file_row_count = 0
     s3_objects_written_to_file = []
