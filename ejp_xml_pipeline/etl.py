@@ -6,7 +6,8 @@ import json
 
 from contextlib import contextmanager
 from contextlib import ExitStack
-from tempfile import TemporaryDirectory, NamedTemporaryFile
+from tempfile import TemporaryDirectory
+from pathlib import Path
 from zipfile import ZipFile
 
 from ejp_xml_pipeline.data_store.s3_data_service import (
@@ -153,9 +154,11 @@ def download_load2bq_cleanup_temp_files(
 ):
     written_file_row_count = 0
     s3_objects_written_to_file = []
-    with NamedTemporaryFile() as named_temp_file:
-        tempfile_name = named_temp_file.name
-        with open(tempfile_name, 'a') as writer:
+    with TemporaryDirectory() as tmp_dir:
+        temp_file_name = str(
+            Path(tmp_dir, "downloaded_file")
+        )
+        with open(temp_file_name, 'a') as writer:
             for matching_file_metadata, _ in matching_file_metadata_iter:
                 s3_object = matching_file_metadata.get(
                     named_literals.S3_FILE_METADATA_NAME_KEY
@@ -172,18 +175,19 @@ def download_load2bq_cleanup_temp_files(
                     s3_object
                 )
                 if written_file_row_count > batch_size_limit:
-                    named_temp_file.flush()
+                    writer.flush()
                     load_and_delete_temp_objects(
                         gcp_project, dataset,
-                        bq_table, tempfile_name,
+                        bq_table, temp_file_name,
                         s3_bucket, s3_objects_written_to_file
                     )
-                    named_temp_file.truncate()
+                    writer.truncate()
                     s3_objects_written_to_file = []
                     written_file_row_count = 0
+            writer.flush()
             load_and_delete_temp_objects(
                 gcp_project, dataset,
-                bq_table, tempfile_name,
+                bq_table, temp_file_name,
                 s3_bucket, s3_objects_written_to_file
             )
 
