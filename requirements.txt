@@ -1,7 +1,7 @@
 lxml==4.5.1
 python-dateutil==2.8.1
 pytz==2020.1
-boto3==1.14.29
+boto3==1.14.52
 bigquery-schema-generator==1.1
 cloudpickle==1.4.1
 apache-airflow[crypto,celery,postgres,jdbc,ssh]==1.10.11
