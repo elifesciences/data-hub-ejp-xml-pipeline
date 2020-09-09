@@ -3,7 +3,7 @@ python-dateutil==2.8.1
 pytz==2020.1
 boto3==1.14.57
 bigquery-schema-generator==1.1
-cloudpickle==1.4.1
+cloudpickle==1.6.0
 apache-airflow[crypto,celery,postgres,jdbc,ssh]==1.10.11
 dask[complete]==2.25.0
 distributed==2.21.0
