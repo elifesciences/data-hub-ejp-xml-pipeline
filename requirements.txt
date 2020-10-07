@@ -6,6 +6,6 @@ bigquery-schema-generator==1.1
 cloudpickle==1.4.1
 apache-airflow[crypto,celery,postgres,jdbc,ssh]==1.10.12
 dask[complete]==2.30.0
-distributed==2.29.0
+distributed==2.30.0
 google-cloud-bigquery==2.0.0
 six==1.15.0
