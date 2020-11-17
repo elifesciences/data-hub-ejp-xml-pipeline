@@ -7,15 +7,17 @@ RUN apt update && apt install sudo -yqq
 RUN usermod -aG sudo airflow
 RUN echo "airflow ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
-
 RUN sed -i 's/LocalExecutor/SequentialExecutor/' /entrypoint.sh
+
+COPY requirements.build.txt ./
+RUN pip install --disable-pip-version-check -r requirements.build.txt
+
 COPY requirements.txt ./
-RUN pip install --upgrade -r requirements.txt
-RUN if [ "${install_dev}" = "y" ]; then  pip install bokeh; fi
+RUN pip install --disable-pip-version-check -r requirements.txt
 
 USER airflow
 COPY --chown=airflow:airflow requirements.dev.txt ./
-RUN if [ "${install_dev}" = "y" ]; then pip install --user -r requirements.dev.txt; fi
+RUN if [ "${install_dev}" = "y" ]; then pip install --disable-pip-version-check --user -r requirements.dev.txt; fi
 
 ENV PATH /usr/local/airflow/.local/bin:$PATH
 
