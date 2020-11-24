@@ -1,7 +1,7 @@
 lxml==4.6.1
 python-dateutil==2.8.1
 pytz==2020.4
-boto3==1.16.23
+boto3==1.16.24
 bigquery-schema-generator==1.2
 cattrs==1.0.0
 cloudpickle==1.4.1
