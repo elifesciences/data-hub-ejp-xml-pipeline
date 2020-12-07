@@ -6,21 +6,21 @@ services:
             - "8080:8080"
         volumes:
             - ./credentials.json:/tmp/credentials.json
-            - ~/.aws/credentials:/usr/local/airflow/.aws/credentials
+            - ~/.aws/credentials:/home/airflow/.aws/credentials
 
     scheduler:
         volumes:
             - ./credentials.json:/tmp/credentials.json
-            - ~/.aws/credentials:/usr/local/airflow/.aws/credentials
+            - ~/.aws/credentials:/home/airflow/.aws/credentials
 
     dask-worker:
         volumes:
-            - ./sample_data_config/ci-ejp-xml-data-pipeline.config.yaml:/usr/local/airflow/app-config/ejp-xml/ejp-xml-data-pipeline.config.yaml
+            - ./sample_data_config/ci-ejp-xml-data-pipeline.config.yaml:/home/airflow/app-config/ejp-xml/ejp-xml-data-pipeline.config.yaml
             - ./credentials.json:/tmp/credentials.json
-            - ~/.aws/credentials:/usr/local/airflow/.aws/credentials
+            - ~/.aws/credentials:/home/airflow/.aws/credentials
 
     test-client:
         volumes:
-            - ./sample_data_config/ci-ejp-xml-data-pipeline.config.yaml:/usr/local/airflow/app-config/ejp-xml/ejp-xml-data-pipeline.config.yaml
+            - ./sample_data_config/ci-ejp-xml-data-pipeline.config.yaml:/home/airflow/app-config/ejp-xml/ejp-xml-data-pipeline.config.yaml
             - ./credentials.json:/tmp/credentials.json
-            - ~/.aws/credentials:/usr/local/airflow/.aws/credentials
+            - ~/.aws/credentials:/home/airflow/.aws/credentials

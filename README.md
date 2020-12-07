@@ -12,18 +12,21 @@ Following are the credentials that you may need to provide
 
 To run the application locally:
 
-    make dev-env
+    make build-dev airflow-initdb airflow-start
 
 To run the whole test on the application:
-       
-    make dev-end2end-test
+    
+    make build-dev end2end-test
  
 To run tests excluding the end to end tests:
 
-    make dev-test-exclude-e2e
+    make build-dev test-exclude-e2e
  
 To set up the development environment:
 
+    # initial setup
+    make dev-venv
+    # update dependencies
     make dev-install
  
  
