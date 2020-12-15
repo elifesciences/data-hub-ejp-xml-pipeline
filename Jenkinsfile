@@ -13,7 +13,7 @@ elifePipeline {
         stage 'Build and run tests', {
             withDataPipelineGcpCredentials {
                 try {
-                    sh "make ci-build-and-end2end-test"
+                    sh "make ci-end2end-test"
                 } finally {
                     sh "make ci-clean"
                 }

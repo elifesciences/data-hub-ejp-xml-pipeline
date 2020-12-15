@@ -5,7 +5,7 @@ boto3==1.16.36
 bigquery-schema-generator==1.4
 cattrs==1.0.0
 cloudpickle==1.4.1
-apache-airflow[crypto,celery,postgres,jdbc,ssh]==1.10.13
+apache-airflow[crypto,celery,postgres,jdbc,ssh]==1.10.12
 dask[complete]==2020.12.0
 distributed==2.30.1
 google-cloud-bigquery==2.6.1

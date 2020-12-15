@@ -58,7 +58,7 @@ def create_table(
         table_name: str,
         json_schema: list
 ):
-    client = bigquery.Client(project=project_name)
+    client = bigquery.Client()
     table_id = compose_full_table_name(
         project_name, dataset_name, table_name
     )
@@ -77,7 +77,7 @@ def does_bigquery_table_exist(
         project_name: str, dataset_name: str, table_name: str
 ) -> bool:
     table_id = compose_full_table_name(project_name, dataset_name, table_name)
-    client = bigquery.Client(project=project_name)
+    client = bigquery.Client()
     try:
         client.get_table(table_id)
         return True
@@ -103,7 +103,7 @@ def get_table_schema_field_names(
         dataset_name: str,
         table_name: str
 ):
-    client = bigquery.Client(project=project_name)
+    client = bigquery.Client()
 
     dataset_ref = client.dataset(dataset_name, project=project_name)
     table_ref = dataset_ref.table(table_name)
@@ -118,7 +118,7 @@ def extend_table_schema_with_nested_schema(
         project_name: str, dataset_name: str,
         table_name: str, new_fields: list
 ):
-    client = bigquery.Client(project=project_name)
+    client = bigquery.Client()
     dataset_ref = client.dataset(dataset_name, project=project_name)
     table_ref = dataset_ref.table(table_name)
     table = client.get_table(table_ref)  # Make an API request.

@@ -1,28 +1,25 @@
-FROM apache/airflow:1.10.13-python3.6
+FROM puckel/docker-airflow:1.10.4
 ARG install_dev
 
 USER root
 
-RUN apt-get update \
-  && apt-get install sudo gcc -yqq \
-  && rm -rf /var/lib/apt/lists/*
-
+RUN apt update && apt install sudo -yqq
 RUN usermod -aG sudo airflow
 RUN echo "airflow ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
-USER airflow
+RUN sed -i 's/LocalExecutor/SequentialExecutor/' /entrypoint.sh
 
 COPY requirements.build.txt ./
-RUN pip install --disable-pip-version-check -r requirements.build.txt --user
+RUN pip install --disable-pip-version-check -r requirements.build.txt
 
 COPY requirements.txt ./
-RUN pip install --disable-pip-version-check -r requirements.txt --user
+RUN pip install --disable-pip-version-check -r requirements.txt
 
 USER airflow
 COPY --chown=airflow:airflow requirements.dev.txt ./
 RUN if [ "${install_dev}" = "y" ]; then pip install --disable-pip-version-check --user -r requirements.dev.txt; fi
 
-ENV PATH /home/airflow/.local/bin:$PATH
+ENV PATH /usr/local/airflow/.local/bin:$PATH
 
 COPY --chown=airflow:airflow ejp_xml_pipeline ./ejp_xml_pipeline
 COPY --chown=airflow:airflow dags ./dags

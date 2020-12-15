@@ -2,14 +2,13 @@
 
 DOCKER_COMPOSE_CI = docker-compose -f docker-compose.yml -f docker-compose.ci.override.yml
 DOCKER_COMPOSE_DEV = docker-compose -f docker-compose.yml -f docker-compose.dev.override.yml
-DOCKER_COMPOSE = $(DOCKER_COMPOSE_DEV)
+DOCKER_COMPOSE = $(DOCKER_COMPOSE_CI)
 
 
 VENV = venv
 PIP = $(VENV)/bin/pip
 PYTHON = PYTHONPATH=dags $(VENV)/bin/python
 
-PYTEST_WATCH_MODULES = tests/unit_test
 
 venv-clean:
 	@if [ -d "$(VENV)" ]; then \
@@ -26,7 +25,7 @@ venv-activate:
 dev-install:
 	$(PIP) install --disable-pip-version-check -r requirements.build.txt
 	SLUGIFY_USES_TEXT_UNIDECODE=yes \
-	$(PIP) install --disable-pip-version-check -r requirements.txt
+		$(PIP) install --disable-pip-version-check -r requirements.txt
 	$(PIP) install --disable-pip-version-check -r requirements.dev.txt
 	$(PIP) install --disable-pip-version-check -e . --no-deps
 
@@ -43,17 +42,15 @@ dev-lint: dev-flake8 dev-pylint
 dev-unittest:
 	$(PYTHON) -m pytest -p no:cacheprovider $(ARGS) tests/unit_test
 
+dev-watch:
+	$(PYTHON) -m pytest_watch -- -p no:cacheprovider $(ARGS) tests/unit_test
 
 dev-dagtest:
 	$(PYTHON) -m pytest -p no:cacheprovider $(ARGS) tests/dag_validation_test
 
 dev-integration-test: dev-install
-	$(VENV)/bin/airflow upgradedb
+	(VENV)/bin/airflow upgradedb
 	$(PYTHON) -m pytest -p no:cacheprovider $(ARGS) tests/integration_test
-
-dev-watch:
-	$(PYTHON) -m pytest_watch -- -p no:cacheprovider $(ARGS) $(PYTEST_WATCH_MODULES)
-
 
 dev-test: dev-lint dev-unittest dev-dagtest
 
@@ -63,38 +60,19 @@ build:
 build-dev:
 	$(DOCKER_COMPOSE) build data-hub-dags-dev
 
-airflow-start:
-	$(DOCKER_COMPOSE) up --scale dask-worker=1 scheduler
-
-airflow-stop:
-	$(DOCKER_COMPOSE) down
-
-test-exclude-e2e: build-dev
+ci-test-exclude-e2e: build-dev
 	$(DOCKER_COMPOSE) run --rm data-hub-dags-dev ./run_test.sh
 
-clean:
-	$(DOCKER_COMPOSE) down -v
-
-airflow-initdb:
-	$(DOCKER_COMPOSE) run --rm  webserver initdb
-
-
-end2end-test:
-	$(MAKE) clean
-	$(MAKE) airflow-initdb
+ci-end2end-test: build-dev
 	$(DOCKER_COMPOSE) run --rm  test-client
-	$(MAKE) clean
+	make ci-clean
 
+dev-env: build-dev
+	$(DOCKER_COMPOSE_DEV) up  --scale dask-worker=1 scheduler
 
-ci-test-exclude-e2e: build-dev
-	$(MAKE) DOCKER_COMPOSE="$(DOCKER_COMPOSE_CI)" \
-		test-exclude-e2e
-
-
-ci-build-and-end2end-test:
-	$(MAKE) DOCKER_COMPOSE="$(DOCKER_COMPOSE_CI)" \
-		build-dev \
-		end2end-test
+dev-end2end-test: build-dev
+	$(DOCKER_COMPOSE_DEV) run --rm  test-client
+	make ci-clean
 
 ci-clean:
-	$(DOCKER_COMPOSE_CI) down -v
+	$(DOCKER_COMPOSE) down -v
