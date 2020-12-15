@@ -14,9 +14,11 @@ x-airflow-env:
   - AIRFLOW__SMTP__SMTP_SSL=False
   - AIRFLOW__SMTP__SMTP_PORT=25
   - AIRFLOW__SMTP__SMTP_MAIL_FROM=do-no-reply@domain.com
-  - GOOGLE_APPLICATION_CREDENTIALS=/usr/local/airflow/.config/gcloud/credentials.json
+  - AIRFLOW__API__AUTH_BACKEND=airflow.api.auth.backend.default
+  - GOOGLE_APPLICATION_CREDENTIALS=/home/airflow/.config/gcloud/credentials.json
   - DEPLOYMENT_ENV=ci
-  - EJP_XML_CONFIG_FILE_PATH=/usr/local/airflow/app-config/ejp-xml/ejp-xml-data-pipeline.config.yaml
+  - EJP_XML_CONFIG_FILE_PATH=/home/airflow/app-config/ejp-xml/ejp-xml-data-pipeline.config.yaml
+
 
 services:
     data-hub-dags:
@@ -24,7 +26,7 @@ services:
             GOOGLE_APPLICATION_CREDENTIALS: /tmp/credentials.json
         build:
             context: .
-        image: elifesciences/data-hub-core-dags
+        image: elifesciences/data-hub-ejp-xml-pipeline
         command: ''
 
     data-hub-dags-dev:
@@ -33,7 +35,7 @@ services:
             dockerfile: Dockerfile
             args:
                 install_dev: y
-        image:  elifesciences/data-hub-core-dags-dev
+        image:  elifesciences/data-hub-ejp-xml-pipeline-dev
         command: /bin/sh -c exit 0
         entrypoint: []
 
@@ -43,8 +45,8 @@ services:
             - dask-worker
             - dask-scheduler
         environment: *airflow-env
-        image:  elifesciences/data-hub-core-dags-dev
-        entrypoint: /entrypoint.sh
+        image:  elifesciences/data-hub-ejp-xml-pipeline-dev
+        entrypoint: /entrypoint
         command: webserver
 
     smtp-server:
@@ -52,20 +54,20 @@ services:
         image:  namshi/smtp
 
     scheduler:
-        image:  elifesciences/data-hub-core-dags-dev
+        image:  elifesciences/data-hub-ejp-xml-pipeline-dev
         depends_on:
             - webserver
         environment: *airflow-env
-        entrypoint: /entrypoint.sh
+        entrypoint: /entrypoint
         command: scheduler
 
     test-client:
-        image:  elifesciences/data-hub-core-dags-dev
+        image:  elifesciences/data-hub-ejp-xml-pipeline-dev
         depends_on:
             - scheduler
         environment: *airflow-env
         command: >
-            bash -c "sudo install -D /tmp/credentials.json -m 644 -t  /usr/local/airflow/.config/gcloud
+            bash -c "sudo install -D /tmp/credentials.json -m 644 -t  /home/airflow/.config/gcloud
             && ./run_test.sh with-end-to-end"
 
     postgres:
@@ -82,7 +84,7 @@ services:
 
     dask-scheduler:
         environment: *airflow-env
-        image: elifesciences/data-hub-core-dags-dev
+        image: elifesciences/data-hub-ejp-xml-pipeline-dev
         hostname: dask-scheduler
         entrypoint: [ ]
         command: ["dask-scheduler"]
@@ -92,9 +94,9 @@ services:
         depends_on:
           - dask-scheduler
           - smtp-server
-        image: elifesciences/data-hub-core-dags-dev
+        image: elifesciences/data-hub-ejp-xml-pipeline-dev
         hostname: dask-worker
         entrypoint: []
         command: >
-            bash -c "sudo install -D /tmp/credentials.json -m 644 -t  /usr/local/airflow/.config/gcloud
+            bash -c "sudo install -D /tmp/credentials.json -m 644 -t  /home/airflow/.config/gcloud
             && ./worker.sh tcp://dask-scheduler:8786"

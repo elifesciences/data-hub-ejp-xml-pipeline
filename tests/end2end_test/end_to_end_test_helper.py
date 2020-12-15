@@ -34,7 +34,11 @@ class AirflowAPI:
             try:
                 data = resp.json()
             except Exception:  # pylint: disable=broad-except
-                data = {}
+                data = {
+                    "error": 'failed to request url=%r, method=%s, status=%s, response: %r' % (
+                        url, method, resp.status_code, resp.text
+                    )
+                }
             raise OSError(data.get("error", "Server error"))
 
         return resp.json()
@@ -96,7 +100,7 @@ class AirflowAPI:
 
 def simple_query(project: str, dataset: str, table: str, query: str) \
         -> List[dict]:
-    bigquery_client = bigquery.Client()
+    bigquery_client = bigquery.Client(project=project)
     _query = \
         query.format(project=project, dataset=dataset, table=table).strip()
     LOGGER.debug("running query:\n%s", _query)
