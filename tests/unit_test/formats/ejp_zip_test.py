@@ -95,7 +95,7 @@ class TestIterParseXmlInZip:
         with ZipFile(BytesIO(zip_bytes), 'r') as zip_file:
             parsed_documents = list(iter_parse_xml_in_zip(
                 zip_file,
-                zip_filename=ZIP_FILE_1
+                zip_filename=ZIP_FILE_1,
                 xml_filename_exclusion_regex_pattern= XML_FILE_EXCLUSION_PATTERN
             ))
             assert parsed_documents == [
