@@ -62,6 +62,9 @@ class eJPXmlDataConfig:
         self.s3_object_key_pattern = updated_config.get(
             "eJPXmlObjectKeyPattern", ""
         )
+        self.xml_filename_exclusion_regex_pattern = updated_config.get(
+            "eJPXmlFileNameExclusionRegexPattern", ""
+        )
         self.etl_id = updated_config.get(
             "dataPipelineId",
         )

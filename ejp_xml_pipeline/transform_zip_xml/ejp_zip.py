@@ -2,6 +2,7 @@ import logging
 from zipfile import ZipFile
 from datetime import datetime
 from typing import List, Iterable
+import re
 
 # pylint: disable=no-name-in-module
 from lxml.etree import Element, XMLParser
@@ -49,12 +50,15 @@ def join_zip_and_xml_filename(zip_filename, xml_filename):
 
 
 def iter_parse_xml_in_zip(
-        zip_file: ZipFile, zip_filename: str,
+        zip_file: ZipFile, zip_filename: str, xml_filename_exclusion_regex_pattern : str
 ) -> Iterable[ParsedDocument]:
     imported_timestamp_str = format_to_iso_timestamp(datetime.now())
     zip_manifest = parse_go_xml(parse_zip_xml_root(zip_file, 'go.xml'))
     filenames = zip_manifest.filenames
     for filename in filenames:
+        if re.match(xml_filename_exclusion_regex_pattern, filename):
+            continue
+
         source_filename = join_zip_and_xml_filename(zip_filename, filename)
         provenance = {
             'source_filename': source_filename,
