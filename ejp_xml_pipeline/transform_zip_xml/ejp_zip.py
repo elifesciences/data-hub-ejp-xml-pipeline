@@ -56,8 +56,11 @@ def iter_parse_xml_in_zip(
     zip_manifest = parse_go_xml(parse_zip_xml_root(zip_file, 'go.xml'))
     filenames = zip_manifest.filenames
     for filename in filenames:
-        if re.match(xml_filename_exclusion_regex_pattern, filename):
-            continue
+        try:
+            if re.match(xml_filename_exclusion_regex_pattern, filename):
+                continue
+        except:
+            pass
 
         source_filename = join_zip_and_xml_filename(zip_filename, filename)
         provenance = {
