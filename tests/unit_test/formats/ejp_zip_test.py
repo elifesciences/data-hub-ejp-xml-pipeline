@@ -98,7 +98,7 @@ class TestIterParseXmlInZip:
             parsed_documents = list(iter_parse_xml_in_zip(
                 zip_file,
                 zip_filename=ZIP_FILE_1,
-                xml_filename_exclusion_regex_pattern=XML_FILE_EXCLUSION_PATTERN
+                xml_filename_exclusion_regex_pattern=None
             ))
             assert parsed_documents == [
                 parse_xml_mock.return_value
@@ -139,3 +139,25 @@ class TestIterParseXmlInZip:
             ))
             assert parsed_documents == []
             parse_xml_mock.assert_not_called()
+
+    def test_should_not_exclude_xml(
+            self,
+            parse_xml_mock: MagicMock
+    ):
+        go_xml = _create_go_xml(
+            create_date=TIMESTAMP_1,
+            filenames=[XML_FILE_1]
+        )
+        manuscript_xml = E.xml('dummy')
+        zip_bytes = _create_zip_bytes({
+            'go.xml': etree.tostring(go_xml),
+            XML_FILE_1: etree.tostring(manuscript_xml)
+        })
+        with ZipFile(BytesIO(zip_bytes), 'r') as zip_file:
+            parsed_documents = list(iter_parse_xml_in_zip(
+                zip_file,
+                zip_filename=ZIP_FILE_1,
+                xml_filename_exclusion_regex_pattern=XML_FILE_EXCLUSION_PATTERN
+            ))
+            assert parsed_documents
+            parse_xml_mock.assert_called_once()
