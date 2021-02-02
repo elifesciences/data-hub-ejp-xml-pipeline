@@ -69,7 +69,7 @@ def get_opened_temp_file_for_entity_types(
 
 
 def etl_ejp_xml_zip(
-        ejp_xml_data_config: eJPXmlDataConfig, object_key: str, 
+        ejp_xml_data_config: eJPXmlDataConfig, object_key: str,
 ):
     with TemporaryDirectory() as file_dir:
         with get_opened_temp_file_for_entity_types(
@@ -86,7 +86,9 @@ def etl_ejp_xml_zip(
                             iter_parse_xml_in_zip(
                                 zip_file,
                                 zip_filename=object_key,
-                                xml_filename_exclusion_regex_pattern=ejp_xml_data_config.xml_filename_exclusion_regex_pattern
+                                xml_filename_exclusion_regex_pattern=(
+                                    ejp_xml_data_config.xml_filename_exclusion_regex_pattern
+                                )
                             )
                         )
                         for parsed_document in parsed_documents:
