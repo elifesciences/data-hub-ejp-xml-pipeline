@@ -22,6 +22,7 @@ EJP_XML_CONFIG = {
     'personVersion2Table': 'sample_person_v2',
     'eJPXmlBucket': 'ci-elife-data-pipeline',
     'eJPXmlObjectKeyPattern': 'airflow_test/ejp-xml-test-data/ejp_elife_*',
+    'eJPXmlFileNameExclusionRegexPattern': '415-0.',
     'stateFile': {
         'bucket': 'state_file_bucket',
         'object': 'state_file_object'

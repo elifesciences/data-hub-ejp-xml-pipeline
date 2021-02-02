@@ -86,6 +86,9 @@ def etl_ejp_xml_zip(
                             iter_parse_xml_in_zip(
                                 zip_file,
                                 zip_filename=object_key,
+                                xml_filename_exclusion_regex_pattern=(
+                                    ejp_xml_data_config.xml_filename_exclusion_regex_pattern
+                                )
                             )
                         )
                         for parsed_document in parsed_documents:
