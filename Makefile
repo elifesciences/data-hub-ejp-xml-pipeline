@@ -63,6 +63,30 @@ build:
 build-dev:
 	$(DOCKER_COMPOSE) build data-hub-dags-dev
 
+flake8:
+	$(DOCKER_COMPOSE) run --rm data-hub-dags-dev \
+		python -m flake8 ejp_xml_pipeline dags tests
+
+pylint:
+	$(DOCKER_COMPOSE) run --rm data-hub-dags-dev \
+		python -m pylint ejp_xml_pipeline dags tests
+
+lint: flake8 pylint
+
+dagtest:
+	$(DOCKER_COMPOSE) run --rm data-hub-dags-dev \
+		python -m pytest -p no:cacheprovider $(ARGS) tests/dag_validation_test
+
+unittest:
+	$(DOCKER_COMPOSE) run --rm data-hub-dags-dev \
+		python -m pytest -p no:cacheprovider $(ARGS) tests/unit_test
+
+test: lint unittest
+
+watch:
+	$(DOCKER_COMPOSE) run --rm data-hub-dags-dev \
+		python -m pytest_watch -- -p no:cacheprovider $(ARGS) $(PYTEST_WATCH_MODULES)
+
 airflow-start:
 	$(DOCKER_COMPOSE) up --scale dask-worker=1 scheduler
 

@@ -1,6 +1,12 @@
 version: '3.4'
 
 services:
+    data-hub-dags-dev:
+        volumes:
+            - ./tests:/opt/airflow/tests
+            - ./ejp_xml_pipeline:/opt/airflow/ejp_xml_pipeline
+            - ./dags:/opt/airflow/dags
+
     webserver:
         ports:
             - "8080:8080"
@@ -25,3 +31,5 @@ services:
             - ~/.config/gcloud/application_default_credentials.json:/tmp/credentials.json
             - ./sample_data_config/ci-ejp-xml-data-pipeline.config.yaml:/home/airflow/app-config/ejp-xml/ejp-xml-data-pipeline.config.yaml
             - ~/.aws/credentials:/home/airflow/.aws/credentials
+
+    
