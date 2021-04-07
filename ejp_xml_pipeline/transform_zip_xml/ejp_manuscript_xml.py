@@ -425,10 +425,10 @@ def email_node_to_dict(email_node: Element) -> dict:
 def derive_version_id_from_manuscript_id_and_created_timestamp(
         manuscript_id: str,
         created_timestamp: str) -> str:
-    if created_timestamp:
-        return '%s/%s' % (manuscript_id, created_timestamp)
-    else:
+    if not created_timestamp:
         return 'NotAcceptable %s/%s' % (manuscript_id, created_timestamp)
+
+    return '%s/%s' % (manuscript_id, created_timestamp)
 
 
 def version_node_to_dict(
