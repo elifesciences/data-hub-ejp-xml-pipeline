@@ -425,6 +425,9 @@ def email_node_to_dict(email_node: Element) -> dict:
 def derive_version_id_from_manuscript_id_and_created_timestamp(
         manuscript_id: str,
         created_timestamp: str) -> str:
+    if not created_timestamp:
+        return 'NotAcceptable %s/%s' % (manuscript_id, created_timestamp)
+
     return '%s/%s' % (manuscript_id, created_timestamp)
 
 
@@ -436,8 +439,11 @@ def version_node_to_dict(
         version_stage_node_to_dict(stage_node)
         for stage_node in version_node.findall('history/stage')
     ]
-    first_stage = stages[0]
-    created_timestamp = first_stage['stage_timestamp']
+    if stages:
+        first_stage = stages[0]
+        created_timestamp = first_stage['stage_timestamp']
+    else:
+        created_timestamp = None
 
     source_filename = provenance['source_filename']
     manuscript_id, manuscript_number = (
