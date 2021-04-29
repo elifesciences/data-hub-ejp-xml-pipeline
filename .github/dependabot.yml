@@ -1,0 +1,56 @@
+version: 2
+updates:
+- package-ecosystem: pip
+  directory: "/"
+  schedule:
+    interval: daily
+  open-pull-requests-limit: 10
+  ignore:
+  - dependency-name: apache-airflow[celery,crypto,jdbc,postgres,ssh]
+    versions:
+    - ">= 2.a, < 3"
+  - dependency-name: cattrs
+    versions:
+    - ">= 1.1.a, < 1.2"
+  - dependency-name: cattrs
+    versions:
+    - ">= 1.2.a, < 1.3"
+  - dependency-name: cloudpickle
+    versions:
+    - ">= 1.5.a, < 1.6"
+  - dependency-name: boto3
+    versions:
+    - 1.17.14
+    - 1.17.16
+    - 1.17.17
+    - 1.17.22
+    - 1.17.30
+    - 1.17.53
+    - 1.17.59
+    - 1.17.9
+  - dependency-name: cattrs
+    versions:
+    - 1.3.0
+    - 1.4.0
+    - 1.5.0
+  - dependency-name: pylint
+    versions:
+    - 2.8.1
+  - dependency-name: distributed
+    versions:
+    - 2021.3.0
+    - 2021.3.1
+    - 2021.4.0
+  - dependency-name: dask[complete]
+    versions:
+    - 2021.3.0
+    - 2021.3.1
+    - 2021.4.0
+  - dependency-name: google-cloud-bigquery
+    versions:
+    - 2.10.0
+    - 2.12.0
+    - 2.13.1
+  - dependency-name: pip
+    versions:
+    - "21.0"
