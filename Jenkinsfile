@@ -13,7 +13,9 @@ elifePipeline {
         stage 'Build and run tests', {
             withDataPipelineGcpCredentials {
                 try {
-                    sh "make ci-build-and-end2end-test"
+                    timeout(time: 30, unit: 'MINUTES') {
+                        sh "make ci-build-and-end2end-test"
+                    }
                 } finally {
                     sh "make ci-clean"
                 }
