@@ -8,5 +8,5 @@ cloudpickle==1.4.1
 apache-airflow[crypto,celery,postgres,jdbc,ssh]==1.10.15
 dask[complete]<=2021.2.0
 distributed<=2021.2.0
-google-cloud-bigquery==2.23.3
+google-cloud-bigquery==2.25.1
 six==1.16.0
