@@ -86,6 +86,12 @@ ADDRESS_1 = {
     'end_dt': TIMESTAMP_2
 }
 
+ORGANIZATION_1 = {
+    'org-id': 'ORG_ID_1',
+    'org-name': 'ORG_NAME_1',
+    'org-type': 'ORG_TYPE_1'
+}
+
 DATES_NOT_AVAILABLE_1 = {
     'dna-start-date': TIMESTAMP_1,
     'dna-end-date': TIMESTAMP_2
@@ -424,3 +430,16 @@ class TestParseXml:
         )
         research_organisms = result.persons[0].data['subject_areas']
         assert research_organisms == [SUBJECT_AREA_1, SUBJECT_AREA_2]
+
+    def test_should_extract_organizations(self):
+        result = _parse_xml_with_defaults(
+            _person_xml(person_nodes=[_person_node({
+                **PERSON_1,
+                'organizations/organization': [ORGANIZATION_1]
+            })])
+        )
+        assert [p.data['organizations'] for p in result.persons] == [[{
+            'organization_id': ORGANIZATION_1['org-id'],
+            'organization_name': ORGANIZATION_1['org-name'],
+            'organization_type': ORGANIZATION_1['org-type']
+        }]]
