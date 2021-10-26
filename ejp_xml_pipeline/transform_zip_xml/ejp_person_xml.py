@@ -129,6 +129,16 @@ def dates_not_available_node_to_dict(
     }
 
 
+def organization_node_to_dict(
+    organization_node: Element
+) -> dict:
+    return {
+        'organization_id': get_and_decode_xml_child_text(organization_node, 'org-id'),
+        'organization_name': get_and_decode_xml_child_text(organization_node, 'org-name'),
+        'organization_type': get_and_decode_xml_child_text(organization_node, 'org-type')
+    }
+
+
 def generate_person_id(source_filename: str, node_index: int) -> str:
     return f'{GENERATED_PERSON_ID_PREFIX}{source_filename}-{node_index}'
 
@@ -182,6 +192,9 @@ def person_node_to_dict(
         ),
         'addresses': extract_list(
             person_node, 'addresses/address', address_node_to_dict
+        ),
+        'organizations': extract_list(
+            person_node, 'organizations/organization', organization_node_to_dict
         ),
         'roles': extract_list(
             person_node, 'roles/role', role_node_to_dict
