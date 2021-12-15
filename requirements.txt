@@ -1,9 +1,9 @@
-lxml==4.6.3
+lxml==4.7.1
 python-dateutil==2.8.1
 pytz==2021.1
 boto3==1.17.106
 bigquery-schema-generator==1.4.1
-cattrs==1.8.0
+cattrs==1.9.0
 cloudpickle==1.4.1
 apache-airflow[crypto,celery,postgres,jdbc,ssh]==1.10.15
 dask[complete]<2021.11.0
