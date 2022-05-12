@@ -36,16 +36,6 @@ updates:
   - dependency-name: pylint
     versions:
     - 2.8.1
-  - dependency-name: distributed
-    versions:
-    - 2021.3.0
-    - 2021.3.1
-    - 2021.4.0
-  - dependency-name: dask[complete]
-    versions:
-    - 2021.3.0
-    - 2021.3.1
-    - 2021.4.0
   - dependency-name: google-cloud-bigquery
     versions:
     - 2.10.0

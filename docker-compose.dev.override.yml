@@ -19,7 +19,7 @@ services:
             - ~/.config/gcloud/application_default_credentials.json:/tmp/credentials.json
             - ~/.aws/credentials:/home/airflow/.aws/credentials
 
-    dask-worker:
+    worker:
         volumes:
             - ~/.config/gcloud/application_default_credentials.json:/tmp/credentials.json
             - ~/.aws/credentials:/home/airflow/.aws/credentials

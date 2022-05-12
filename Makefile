@@ -58,7 +58,7 @@ dev-watch:
 dev-test: dev-lint dev-unittest dev-dagtest
 
 build:
-	$(DOCKER_COMPOSE) build data-hub_image
+	$(DOCKER_COMPOSE) build data-hub-dags
 
 build-dev:
 	$(DOCKER_COMPOSE) build data-hub-dags-dev
@@ -88,7 +88,7 @@ watch:
 		python -m pytest_watch -- -p no:cacheprovider $(ARGS) $(PYTEST_WATCH_MODULES)
 
 airflow-start:
-	$(DOCKER_COMPOSE) up --scale dask-worker=1 scheduler
+	$(DOCKER_COMPOSE) up worker webserver flower
 
 airflow-stop:
 	$(DOCKER_COMPOSE) down
