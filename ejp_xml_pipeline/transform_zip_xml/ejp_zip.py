@@ -46,7 +46,7 @@ def parse_zip_xml_root(zip_file: ZipFile, name: str) -> Element:
 
 
 def join_zip_and_xml_filename(zip_filename, xml_filename):
-    return '%s/%s' % (zip_filename, xml_filename)
+    return f'{zip_filename}/{xml_filename}'
 
 
 def iter_parse_xml_in_zip(
