@@ -137,7 +137,7 @@ class TestIterParseXmlInZip:
                 zip_filename=ZIP_FILE_1,
                 xml_filename_exclusion_regex_pattern=XML_FILE_EXCLUSION_PATTERN
             ))
-            assert parsed_documents == []
+            assert not parsed_documents
             parse_xml_mock.assert_not_called()
 
     def test_should_not_exclude_xml(
