@@ -44,8 +44,8 @@ ORCID_1 = 'Orcid 1'
 MANUSCRIPT_TYPE_1 = 'Manuscript Type 1'
 
 MANUSCRIPT_ID_1 = '12345'
-MANUSCRIPT_NUMBER_1 = '01-02-2018-RA-eLife-%s' % MANUSCRIPT_ID_1
-MANUSCRIPT_FILENAME_1 = '%s.xml' % MANUSCRIPT_NUMBER_1
+MANUSCRIPT_NUMBER_1 = f'01-02-2018-RA-eLife-{MANUSCRIPT_ID_1}'
+MANUSCRIPT_FILENAME_1 = f'{MANUSCRIPT_NUMBER_1}.xml'
 
 FUNDING_TITLE_1 = 'Funding Title'
 GRANT_REFERENCE_1 = 'Grant Reference 1'
@@ -200,10 +200,7 @@ class TestDeriveVersionIdFromManuscriptIdAndCreatedTimestamp:
     def test_should_combine_manuscript_id_and_created_timestamp(self):
         assert derive_version_id_from_manuscript_id_and_created_timestamp(
             MANUSCRIPT_ID_1, TIMESTAMP_1
-        ) == '%s/%s' % (
-            MANUSCRIPT_ID_1,
-            TIMESTAMP_1
-        )
+        ) == f'{MANUSCRIPT_ID_1}/{TIMESTAMP_1}'
 
 
 class TestParseXml:
@@ -456,7 +453,7 @@ class TestParseXml:
 
         def test_should_extract_overall_stage_and_shorted_type_from_init_submission(self):
             full_manuscript_type = (
-                '%s %s' % (INITIAL_SUBMISSION_TYPE_PREFIX, MANUSCRIPT_TYPE_1)
+                f'{INITIAL_SUBMISSION_TYPE_PREFIX} {MANUSCRIPT_TYPE_1}'
             )
             result = _parse_xml_with_defaults(
                 _manuscript_xml([_version_node({

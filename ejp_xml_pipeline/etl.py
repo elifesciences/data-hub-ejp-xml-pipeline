@@ -60,7 +60,7 @@ def get_opened_temp_file_for_entity_types(
             ent_db_load_config.set_directory(file_dir)
         opened_files = {
             ent_type: stack.enter_context(
-                open(ent_conf.get_full_file_location(), "w")
+                open(ent_conf.get_full_file_location(), "w", encoding="UTF-8")
             )
             for ent_type, ent_conf
             in ejp_xml_data_config.entity_type_mapping.items()
@@ -161,7 +161,7 @@ def download_load2bq_cleanup_temp_files(
         temp_file_name = str(
             Path(tmp_dir, "downloaded_file")
         )
-        with open(temp_file_name, 'a') as writer:
+        with open(temp_file_name, 'a', encoding="UTF-8") as writer:
             for matching_file_metadata, _ in matching_file_metadata_iter:
                 s3_object = matching_file_metadata.get(
                     named_literals.S3_FILE_METADATA_NAME_KEY

@@ -426,9 +426,9 @@ def derive_version_id_from_manuscript_id_and_created_timestamp(
         manuscript_id: str,
         created_timestamp: str) -> str:
     if not created_timestamp:
-        return 'NotAcceptable %s/%s' % (manuscript_id, created_timestamp)
+        return f'NotAcceptable {manuscript_id}/{created_timestamp}'
 
-    return '%s/%s' % (manuscript_id, created_timestamp)
+    return f'{manuscript_id}/{created_timestamp}'
 
 
 def version_node_to_dict(
