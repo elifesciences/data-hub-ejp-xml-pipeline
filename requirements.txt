@@ -7,5 +7,5 @@ bigquery-schema-generator==1.4.1
 cattrs==1.8.0
 cloudpickle==1.4.1
 apache-airflow[crypto,celery,postgres,jdbc,ssh]==1.10.15
-google-cloud-bigquery==2.32.0
+google-cloud-bigquery==3.1.0
 six==1.16.0
