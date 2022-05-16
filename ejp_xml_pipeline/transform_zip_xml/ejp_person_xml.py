@@ -248,12 +248,10 @@ def log_no_person_id_summary(
         ),
         3
     ))
-    no_person_id_percentage=100 * no_person_id_count / total_count
-    LOGGER.warning('xml contains %s of %s (%s percent) person entries without person ids, e.g. %s',
-        no_person_id_count,
-        total_count,
-        no_person_id_percentage,
-        examples
+    no_person_id_percentage = 100 * no_person_id_count / total_count
+    LOGGER.warning(
+        'xml contains %s of %s (%s percent) person entries without person ids, e.g. %s',
+        no_person_id_count, total_count, no_person_id_percentage, examples
     )
 
 
