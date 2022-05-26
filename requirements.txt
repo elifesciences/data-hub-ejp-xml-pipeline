@@ -1,3 +1,4 @@
+apache-airflow[crypto,celery,postgres,jdbc,ssh]==2.3.0
 lxml==4.8.0
 python-dateutil==2.8.1
 pytz==2022.1
@@ -6,6 +7,5 @@ botocore<1.23.0, >=1.22.0
 bigquery-schema-generator==1.5
 cattrs==1.8.0
 cloudpickle==2.0.0
-apache-airflow[crypto,celery,postgres,jdbc,ssh]==1.10.15
 google-cloud-bigquery==3.1.0
 six==1.16.0
