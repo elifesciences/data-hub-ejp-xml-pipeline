@@ -72,7 +72,7 @@ services:
         hostname: worker
         command: >
             bash -c "sudo install -D /tmp/credentials.json -m 644 -t  /home/airflow/.config/gcloud
-            && airflow worker"
+            && airflow celery worker"
 
     test-client:
         image:  elifesciences/data-hub-ejp-xml-pipeline-dev
