@@ -15,6 +15,7 @@ x-airflow-env:
   - AIRFLOW__SMTP__SMTP_SSL=False
   - AIRFLOW__SMTP__SMTP_PORT=25
   - AIRFLOW__SMTP__SMTP_MAIL_FROM=do-no-reply@domain.com
+  - AIRFLOW__API__ENABLE_EXPERIMENTAL_API=True
   - AIRFLOW__API__AUTH_BACKEND=airflow.api.auth.backend.default
   - GOOGLE_APPLICATION_CREDENTIALS=/home/airflow/.config/gcloud/credentials.json
   - DEPLOYMENT_ENV=ci
@@ -44,6 +45,8 @@ services:
         depends_on:
             - worker
         environment: *airflow-env
+        volumes:
+            - ./config/webserver_config.py:/opt/airflow/webserver_config.py
         image:  elifesciences/data-hub-ejp-xml-pipeline-dev
         entrypoint: /entrypoint
         command: webserver
@@ -71,7 +74,7 @@ services:
         hostname: worker
         command: >
             bash -c "sudo install -D /tmp/credentials.json -m 644 -t  /home/airflow/.config/gcloud
-            && airflow worker"
+            && airflow celery worker"
 
     test-client:
         image:  elifesciences/data-hub-ejp-xml-pipeline-dev
@@ -100,11 +103,11 @@ services:
         environment:
             - ALLOW_EMPTY_PASSWORD=yes
 
-    flower:
-        image: elifesciences/data-hub-ejp-xml-pipeline-dev
-        depends_on:
-            - redis
-        environment: *airflow-env
-        ports:
-            - "5555:5555"
-        command: celery flower
+    # flower:
+    #     image: elifesciences/data-hub-ejp-xml-pipeline-dev
+    #     depends_on:
+    #         - redis
+    #     environment: *airflow-env
+    #     ports:
+    #         - "5555:5555"
+    #     command: celery flower

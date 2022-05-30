@@ -77,11 +77,14 @@ def trigger_run_test_pipeline(
     )
     airflow_api.unpause_dag(dag_id)
     execution_date = airflow_api.trigger_dag(dag_id=dag_id)
-    is_dag_running = wait_till_triggered_dag_run_ends(
-        dag_id, execution_date, airflow_api
-    )
-    assert not is_dag_running
-    assert airflow_api.get_dag_status(dag_id, execution_date) == "success"
+    dag_status: str
+    while True:
+        dag_status = airflow_api.get_dag_status(dag_id, execution_date)
+        if dag_status not in {"running", "queued"}:
+            break
+        time.sleep(5)
+        LOGGER.info("etl in progress (status: %r)", dag_status)
+    assert dag_status == "success"
     for table in [
             ejp_xml_config.manuscript_table,
             ejp_xml_config.manuscript_version_table,
@@ -94,19 +97,6 @@ def trigger_run_test_pipeline(
             table
         )
         assert loaded_table_row_count > 0
-
-
-def wait_till_triggered_dag_run_ends(
-        dag_id,
-        execution_date, airflow_api
-):
-    is_dag_running = True
-    while is_dag_running:
-        is_dag_running = airflow_api.is_dag_running(dag_id, execution_date)
-        LOGGER.info("etl in progress")
-        time.sleep(5)
-    time.sleep(10)
-    return is_dag_running
 
 
 class TestQueryTemplate:
