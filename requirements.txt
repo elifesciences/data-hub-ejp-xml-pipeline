@@ -1,5 +1,5 @@
 apache-airflow[crypto,celery,postgres,jdbc,ssh]==2.3.0
-apache-airflow-providers-amazon==3.4.0
+apache-airflow-providers-amazon==4.1.0
 lxml==4.9.1
 python-dateutil==2.8.1
 pytz==2022.1
