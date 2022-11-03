@@ -6,7 +6,7 @@ from typing import Iterable, Tuple
 from airflow import DAG
 from airflow.models import Variable
 from airflow.models.dagrun import DagRun
-from airflow.operators.python_operator import ShortCircuitOperator
+from airflow.operators.python import ShortCircuitOperator
 
 from ejp_xml_pipeline.dag_pipeline_config.xml_config import eJPXmlDataConfig
 from ejp_xml_pipeline.etl_state import get_stored_ejp_xml_processing_state
