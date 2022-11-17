@@ -5,8 +5,8 @@ from collections import defaultdict
 
 from typing import Iterable
 
-from airflow.hooks.S3_hook import S3Hook
-from airflow.sensors.base_sensor_operator import BaseSensorOperator
+from airflow.providers.amazon.aws.hooks.s3 import S3Hook
+from airflow.sensors.base import BaseSensorOperator
 from airflow.utils.decorators import apply_defaults
 
 from ejp_xml_pipeline.dag_pipeline_config.xml_config import eJPXmlDataConfig
