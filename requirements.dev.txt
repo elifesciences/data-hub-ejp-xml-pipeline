@@ -5,3 +5,4 @@ pytest-watch==4.2.0
 mypy==0.990
 types-PyYAML
 types-pytz
+types-python-dateutil
