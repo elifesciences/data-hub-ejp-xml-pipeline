@@ -38,6 +38,9 @@ dev-flake8:
 dev-pylint:
 	$(PYTHON) -m pylint ejp_xml_pipeline dags tests
 
+dev-mypy:
+	$(PYTHON) -m mypy ejp_xml_pipeline dags tests
+
 dev-lint: dev-flake8 dev-pylint
 
 dev-unittest:
