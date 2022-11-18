@@ -3,7 +3,7 @@ import logging
 from datetime import datetime
 from functools import partial
 import re
-from typing import Tuple
+from typing import Optional, Tuple
 
 # pylint: disable=no-name-in-module
 from lxml.etree import Element
@@ -333,7 +333,7 @@ def senior_editor_node_to_dict(senior_editor_node: Element) -> dict:
     }
 
 
-def _parse_yes_no(yes_no: str) -> bool:
+def _parse_yes_no(yes_no: str) -> Optional[bool]:
     if not yes_no:
         return None
     if yes_no.lower() == 'yes':
