@@ -1,4 +1,4 @@
-from typing import Dict, List, Tuple, Union
+from typing import Dict, List, Optional, Tuple, Union
 
 # pylint: disable=no-name-in-module
 from lxml.builder import E
@@ -33,7 +33,7 @@ def _simple_object_node(tag_name: str, props_or_text: PropsOrText) -> Element:
 def dict_to_xml(
         tag_name: str,
         props: NestedProps,
-        list_and_item_tag_name_by_prop: Dict[str, Tuple[str]] = None) -> Element:
+        list_and_item_tag_name_by_prop: Optional[Dict[str, Tuple[str, str]]] = None) -> Element:
     if not list_and_item_tag_name_by_prop:
         list_and_item_tag_name_by_prop = {}
     node = E(tag_name, _attribute_props(props))
