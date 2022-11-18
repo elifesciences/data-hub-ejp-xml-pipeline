@@ -1,7 +1,7 @@
 import logging
 from datetime import datetime
 from itertools import islice
-from typing import List, Optional
+from typing import List
 
 # pylint: disable=no-name-in-module
 from lxml import etree
