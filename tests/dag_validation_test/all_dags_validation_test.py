@@ -23,8 +23,8 @@ def test_dag_should_contain_no_cycle(dag_file):
     mod_spec.loader.exec_module(module)
 
     dag_objects = [
-        var for var in vars(module).values() if isinstance(
-            var, af_models.DAG)]
+        var for var in vars(module).values() if isinstance(var, af_models.DAG)
+    ]
     assert len(dag_objects) > 0
 
     for dag in dag_objects:
