@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Optional, Tuple, Union, cast
+from typing import Dict, List, Optional, Tuple, Union, cast
 
 # pylint: disable=no-name-in-module
 from lxml.builder import E
@@ -10,11 +10,11 @@ PropsOrText = Union[Props, str]
 NestedProps = Dict[str, Union[str, List[PropsOrText]]]
 
 
-def _element_props(props: Props) -> Dict[str, Any]:
+def _element_props(props: NestedProps) -> NestedProps:
     return {k: v for k, v in props.items() if not k.startswith('@')}
 
 
-def _attribute_props(props: Props) -> Dict[str, str]:
+def _attribute_props(props: NestedProps) -> NestedProps:
     return {k[1:]: v for k, v in props.items() if k.startswith('@')}
 
 
@@ -22,7 +22,7 @@ def _simple_object_node(tag_name: str, props_or_text: PropsOrText) -> Element:
     if isinstance(props_or_text, str):
         text = props_or_text
         return E(tag_name, text)
-    props = props_or_text
+    props = cast(NestedProps, props_or_text)
     return E(
         tag_name,
         *[E(k, v) for k, v in _element_props(props).items()],
