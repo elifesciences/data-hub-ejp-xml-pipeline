@@ -16,13 +16,13 @@ LOGGER = logging.getLogger(__name__)
 # pylint: disable=too-many-arguments
 def load_file_into_bq(
         filename: str,
+        project_name: str,
         dataset_name: str,
         table_name: str,
         source_format=SourceFormat.NEWLINE_DELIMITED_JSON,
         write_mode=WriteDisposition.WRITE_APPEND,
         auto_detect_schema=False,
         rows_to_skip=0,
-        project_name: str = None,
 ):
     if os.path.isfile(filename) and os.path.getsize(filename) == 0:
         LOGGER.info("File %s is empty.", filename)
