@@ -105,7 +105,7 @@ class S3HookNewFileMonitor(S3Hook):
             delimiter="",
             page_size=None,
             max_items=None,
-    ) -> Iterable[dict]:
+    ) -> Iterable[tuple]:
 
         config = {
             "PageSize": page_size,
