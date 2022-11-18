@@ -1,4 +1,4 @@
-from typing import Callable, List
+from typing import Callable, List, Optional
 # pylint: disable=no-name-in-module
 from lxml.etree import Element
 
@@ -11,7 +11,7 @@ class MemberTypes:
     ORCID = 'ORCID'
 
 
-def format_optional_to_iso_timestamp(timestamp_str: str) -> str:
+def format_optional_to_iso_timestamp(timestamp_str: str) -> Optional[str]:
     return format_to_iso_timestamp(timestamp_str) if timestamp_str else None
 
 
