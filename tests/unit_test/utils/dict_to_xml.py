@@ -1,4 +1,4 @@
-from typing import Dict, List, Optional, Tuple, Union
+from typing import Any, Dict, List, Optional, Tuple, Union, cast
 
 # pylint: disable=no-name-in-module
 from lxml.builder import E
@@ -10,7 +10,7 @@ PropsOrText = Union[Props, str]
 NestedProps = Dict[str, Union[str, List[PropsOrText]]]
 
 
-def _element_props(props: Props) -> Dict[str, str]:
+def _element_props(props: Props) -> Dict[str, Any]:
     return {k: v for k, v in props.items() if not k.startswith('@')}
 
 
@@ -45,7 +45,7 @@ def dict_to_xml(
             continue
         list_tag_names = list_and_item_tag_name_by_prop.get(key)
         if not list_tag_names and isinstance(value, list):
-            list_tag_names = key.split('/')
+            list_tag_names = cast(Tuple[str, str], key.split('/'))
         if list_tag_names:
             list_node = node
             for list_tag_name in list_tag_names[0:-1]:
