@@ -1,4 +1,4 @@
-from typing import Dict, List, Tuple, Union
+from typing import Dict, List, Optional, Tuple, Union, cast
 
 # pylint: disable=no-name-in-module
 from lxml.builder import E
@@ -10,11 +10,11 @@ PropsOrText = Union[Props, str]
 NestedProps = Dict[str, Union[str, List[PropsOrText]]]
 
 
-def _element_props(props: Props) -> Dict[str, str]:
+def _element_props(props: NestedProps) -> NestedProps:
     return {k: v for k, v in props.items() if not k.startswith('@')}
 
 
-def _attribute_props(props: Props) -> Dict[str, str]:
+def _attribute_props(props: NestedProps) -> NestedProps:
     return {k[1:]: v for k, v in props.items() if k.startswith('@')}
 
 
@@ -22,7 +22,7 @@ def _simple_object_node(tag_name: str, props_or_text: PropsOrText) -> Element:
     if isinstance(props_or_text, str):
         text = props_or_text
         return E(tag_name, text)
-    props = props_or_text
+    props = cast(NestedProps, props_or_text)
     return E(
         tag_name,
         *[E(k, v) for k, v in _element_props(props).items()],
@@ -33,7 +33,7 @@ def _simple_object_node(tag_name: str, props_or_text: PropsOrText) -> Element:
 def dict_to_xml(
         tag_name: str,
         props: NestedProps,
-        list_and_item_tag_name_by_prop: Dict[str, Tuple[str]] = None) -> Element:
+        list_and_item_tag_name_by_prop: Optional[Dict[str, Tuple[str, str]]] = None) -> Element:
     if not list_and_item_tag_name_by_prop:
         list_and_item_tag_name_by_prop = {}
     node = E(tag_name, _attribute_props(props))
@@ -45,7 +45,7 @@ def dict_to_xml(
             continue
         list_tag_names = list_and_item_tag_name_by_prop.get(key)
         if not list_tag_names and isinstance(value, list):
-            list_tag_names = key.split('/')
+            list_tag_names = cast(Tuple[str, str], key.split('/'))
         if list_tag_names:
             list_node = node
             for list_tag_name in list_tag_names[0:-1]:

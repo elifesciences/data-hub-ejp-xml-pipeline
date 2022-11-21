@@ -1,5 +1,5 @@
 import logging
-from typing import List
+from typing import List, Optional
 
 # pylint: disable=no-name-in-module
 from lxml import etree
@@ -145,7 +145,7 @@ def _parse_xml_with_defaults(*args, **kwargs):
     })
 
 
-def _person_xml(person_nodes: List[Element] = None):
+def _person_xml(person_nodes: Optional[List[Element]] = None):
     root = E.persons(*(person_nodes or []))
     # pylint: disable=c-extension-no-member
     LOGGER.debug('person xml: %s', etree.tostring(root))

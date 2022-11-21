@@ -1,6 +1,6 @@
 # pylint: disable=too-many-public-methods
 
-from typing import List
+from typing import List, Optional
 # pylint: disable=no-name-in-module
 from lxml.builder import E
 from lxml.etree import Element
@@ -157,8 +157,8 @@ def _version_node(version_props: dict) -> Element:
 
 
 def _manuscript_xml(
-        version_nodes: List[Element] = None,
-        person_nodes: List[Element] = None,
+        version_nodes: Optional[List[Element]] = None,
+        person_nodes: Optional[List[Element]] = None,
         country: str = COUNTRY_1,
         doi: str = DOI_1):
     return E.xml(

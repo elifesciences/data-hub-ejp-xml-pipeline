@@ -4,3 +4,4 @@ credentials.json
 venv
 
 *.pyc
+.mypy_cache

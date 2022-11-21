@@ -38,7 +38,10 @@ dev-flake8:
 dev-pylint:
 	$(PYTHON) -m pylint ejp_xml_pipeline dags tests
 
-dev-lint: dev-flake8 dev-pylint
+dev-mypy:
+	$(PYTHON) -m mypy ejp_xml_pipeline dags tests
+
+dev-lint: dev-flake8 dev-pylint dev-mypy
 
 dev-unittest:
 	$(PYTHON) -m pytest -p no:cacheprovider $(ARGS) tests/unit_test
@@ -71,7 +74,11 @@ pylint:
 	$(DOCKER_COMPOSE) run --rm data-hub-dags-dev \
 		python -m pylint ejp_xml_pipeline dags tests
 
-lint: flake8 pylint
+mypy:
+	$(DOCKER_COMPOSE) run --rm data-hub-dags-dev \
+		python -m mypy ejp_xml_pipeline dags tests
+
+lint: flake8 pylint mypy
 
 dagtest:
 	$(DOCKER_COMPOSE) run --rm data-hub-dags-dev \

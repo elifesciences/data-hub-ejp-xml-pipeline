@@ -34,6 +34,7 @@ RUN pip install -e . --user --no-dependencies
 COPY .pylintrc ./.pylintrc
 COPY .flake8 ./.flake8
 COPY tests ./tests
+COPY mypy.ini ./
 COPY run_test.sh ./
 
 RUN mkdir -p $AIRFLOW_HOME/serve

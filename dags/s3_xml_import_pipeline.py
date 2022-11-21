@@ -91,9 +91,8 @@ def get_config() -> eJPXmlDataConfig:
     dep_env = os.getenv(
         DEPLOYMENT_ENV_ENV_NAME, DEFAULT_DEPLOYMENT_ENV_VALUE
     )
-    conf_file_path = os.getenv(
-        named_literals.EJP_XML_CONFIG_FILE_PATH_ENV_NAME
-    )
+    conf_file_path = os.environ[named_literals.EJP_XML_CONFIG_FILE_PATH_ENV_NAME]
+
     data_config_dict = get_yaml_file_as_dict(
         conf_file_path
     )

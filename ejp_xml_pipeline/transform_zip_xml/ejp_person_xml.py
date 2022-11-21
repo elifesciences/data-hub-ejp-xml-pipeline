@@ -148,7 +148,7 @@ def is_generated_person_id(person_id: str) -> bool:
 
 
 def has_generated_person_id(person: dict) -> bool:
-    return is_generated_person_id(person.get('person_id'))
+    return is_generated_person_id(person['person_id'])
 
 
 def person_node_to_dict(

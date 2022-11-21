@@ -18,6 +18,9 @@ PYLINTHOME=/tmp/datahub-dags-pylint \
 echo "running flake8"
 flake8 tests/ ejp_xml_pipeline/ dags/
 
+echo "running mypy"
+mypy tests/ ejp_xml_pipeline/ dags/
+
 pytest tests/unit_test/ -p no:cacheprovider -s --disable-warnings
 
 echo "running dag validation tests"
