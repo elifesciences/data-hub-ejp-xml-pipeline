@@ -3,5 +3,4 @@
 min-similarity-lines=5
 disable=
     missing-docstring,
-    too-few-public-methods,
-    no-self-use
+    too-few-public-methods
