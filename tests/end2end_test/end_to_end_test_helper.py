@@ -46,12 +46,14 @@ class AirflowAPI:
 
     def unpause_dag(self, dag_id):
         return requests.get(
-            f"{self.airflow_url}/api/experimental/dags/{dag_id}/paused/false"
+            f"{self.airflow_url}/api/experimental/dags/{dag_id}/paused/false",
+            timeout=10
         )
 
     def pause_dag(self, dag_id):
         return requests.get(
-            f"{self.airflow_url}/api/experimental/dags/{dag_id}/paused/true"
+            f"{self.airflow_url}/api/experimental/dags/{dag_id}/paused/true",
+            timeout=10
         )
 
     def trigger_dag(self, dag_id, conf=None):
@@ -66,12 +68,14 @@ class AirflowAPI:
 
     def dag_state(self, dag_id, execution_date):
         return requests.get(
-            f"{self.airflow_url}/api/experimental/dags/{dag_id}/dag_runs/{execution_date}"
+            f"{self.airflow_url}/api/experimental/dags/{dag_id}/dag_runs/{execution_date}",
+            timeout=10
         )
 
     def is_triggered_dag_running(self, dag_id):
         response = requests.get(
-            f"{self.airflow_url}/api/experimental/dags/{dag_id}/dag_runs"
+            f"{self.airflow_url}/api/experimental/dags/{dag_id}/dag_runs",
+            timeout=10
         )
         dag_runs = json.loads(response.text)
         states = [
