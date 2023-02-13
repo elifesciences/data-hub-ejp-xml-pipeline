@@ -53,7 +53,7 @@ class ParsedManuscriptDocument(ParsedDocument):
         return self.persons + [self.manuscript] + self.versions
 
 
-MANUSCRIPT_NO_REGEX = re.compile(r'^.*\D-(\d{3,})\D?.*$')
+MANUSCRIPT_NO_REGEX = re.compile(r'.*e[L,l]ife.*-(\d{5,6})$')
 
 
 def to_bool(bool_str):

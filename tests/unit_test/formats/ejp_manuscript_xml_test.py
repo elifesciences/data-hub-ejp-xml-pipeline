@@ -189,11 +189,19 @@ class TestManuscriptNumberToManuscriptId:
     def test_should_extract_elife_manuscript_id(self):
         assert manuscript_number_to_manuscript_id('2020-01-02-RA-eLife-12345') == '12345'
 
+    def test_should_extract_elife_manuscript_id_from_rp_site_data(self):
+        assert manuscript_number_to_manuscript_id('eLife-RP-RA-2023-12345') == '12345'
+
     def test_should_use_full_manuscript_number_if_not_elife_format(self):
         assert manuscript_number_to_manuscript_id('123-12') == '123-12'
 
     def test_should_use_full_manuscript_number_if_not_elife_format_but_long_digits(self):
         assert manuscript_number_to_manuscript_id('123-12345') == '123-12345'
+
+    def test_should_use_full_manuscript_number_if_not_elife_format_but_long_digits_for_new_site(
+        self
+    ):
+        assert manuscript_number_to_manuscript_id('123-123456') == '123-123456'
 
 
 class TestDeriveVersionIdFromManuscriptIdAndCreatedTimestamp:
