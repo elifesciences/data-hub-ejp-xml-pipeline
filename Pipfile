@@ -1,0 +1,31 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[requires]
+python_version = "3.8"
+
+[packages]
+apache-airflow-providers-amazon = "==7.3.0"
+lxml = "==4.9.1"
+python-dateutil = "==2.8.1"
+pytz = "*"
+boto3 = "~=1.24"
+bigquery-schema-generator = "==1.5"
+cattrs = ">=22.1.0"
+cloudpickle = "==2.2.0"
+google-cloud-bigquery = "~=3.4"
+six = "==1.16.0"
+apache-airflow = {version = "~=2.4", extras = ["celery", "crypto", "jdbc", "postgres", "ssh"]}
+
+[dev-packages]
+flake8 = "==5.0.4"
+pylint = "==2.15.6"
+pytest = "==7.2.0"
+pytest-watch = "==4.2.0"
+mypy = "==0.991"
+types-pyyaml = "*"
+types-pytz = "*"
+types-python-dateutil = "*"
+types-requests = "*"
