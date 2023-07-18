@@ -24,11 +24,11 @@ venv-activate:
 	bash -c "venv/bin/activate"
 
 dev-install:
-	$(PIP) install -r requirements.build.txt
+	$(PIP) install --disable-pip-version-check -r requirements.build.txt
 	SLUGIFY_USES_TEXT_UNIDECODE=yes \
-	$(PIP) install -r requirements.txt
-	$(PIP) install -r requirements.dev.txt
-	$(PIP) install -e . --no-deps
+	$(PIP) install --disable-pip-version-check -r requirements.txt
+	$(PIP) install --disable-pip-version-check -r requirements.dev.txt
+	$(PIP) install --disable-pip-version-check -e . --no-deps
 
 dev-venv: venv-create dev-install
 
