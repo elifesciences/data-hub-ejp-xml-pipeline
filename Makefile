@@ -24,7 +24,7 @@ venv-activate:
 	bash -c "venv/bin/activate"
 
 dev-install:
-	$(PIP) install --disable-pip-version-check -r requirements.build.txt
+	$(PIP) install --disable-pip-version-check -r requirements.build.txt --upgrade
 	SLUGIFY_USES_TEXT_UNIDECODE=yes \
 	$(PIP) install --disable-pip-version-check -r requirements.txt
 	$(PIP) install --disable-pip-version-check -r requirements.dev.txt

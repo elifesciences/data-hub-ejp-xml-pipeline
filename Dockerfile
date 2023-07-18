@@ -15,7 +15,7 @@ RUN echo "airflow ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 USER airflow
 
 COPY requirements.build.txt ./
-RUN pip install --disable-pip-version-check -r requirements.build.txt --user
+RUN pip install --disable-pip-version-check -r requirements.build.txt --upgrade --user 
 
 COPY requirements.txt ./
 RUN pip install --disable-pip-version-check -r requirements.txt --user
