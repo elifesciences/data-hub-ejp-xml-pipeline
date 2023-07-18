@@ -15,14 +15,14 @@ RUN echo "airflow ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 USER airflow
 
 COPY requirements.build.txt ./
-RUN pip install --disable-pip-version-check -r requirements.build.txt --user
+RUN pip install -r requirements.build.txt --user
 
 COPY requirements.txt ./
-RUN pip install --disable-pip-version-check -r requirements.txt --user
+RUN pip install -r requirements.txt --user
 
 USER airflow
 COPY requirements.dev.txt ./
-RUN if [ "${install_dev}" = "y" ]; then pip install --disable-pip-version-check --user -r requirements.dev.txt; fi
+RUN if [ "${install_dev}" = "y" ]; then pip install --user -r requirements.dev.txt; fi
 
 ENV PATH /home/airflow/.local/bin:$PATH
 
