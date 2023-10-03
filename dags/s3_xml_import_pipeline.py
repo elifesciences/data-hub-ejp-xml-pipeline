@@ -79,7 +79,7 @@ S3_XML_ETL_DAG = DAG(
     default_args=get_default_args_with_notification_emails(),
     dagrun_timeout=timedelta(minutes=60),
     max_active_runs=20,
-    concurrency=30
+    max_active_tasks=30
 )
 
 
