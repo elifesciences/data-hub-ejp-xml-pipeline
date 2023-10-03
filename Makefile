@@ -106,8 +106,8 @@ test-exclude-e2e: build-dev
 clean:
 	$(DOCKER_COMPOSE) down -v
 
-airflow-db-upgrade:
-	$(DOCKER_COMPOSE) run --rm  webserver db upgrade
+airflow-db-migrate:
+	$(DOCKER_COMPOSE) run --rm  webserver db migrate
 
 airflow-initdb:
 	$(DOCKER_COMPOSE) run --rm  webserver db init
@@ -115,7 +115,7 @@ airflow-initdb:
 
 end2end-test:
 	$(MAKE) clean
-	$(MAKE) airflow-db-upgrade
+	$(MAKE) airflow-db-migrate
 	$(MAKE) airflow-initdb
 	$(DOCKER_COMPOSE) run --rm  test-client
 	$(MAKE) clean
