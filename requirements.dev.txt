@@ -6,4 +6,4 @@ mypy==0.991
 types-PyYAML
 types-pytz
 types-python-dateutil
-types-requests==2.31.0.2
+types-requests==2.31.0.8
