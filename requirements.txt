@@ -1,7 +1,7 @@
 apache-airflow[crypto,celery,postgres,jdbc,ssh]==2.7.1
 apache-airflow-providers-amazon==8.3.1
 lxml==5.1.0
-python-dateutil==2.8.2
+python-dateutil==2.9.0.post0
 pytz==2023.3.post1
 boto3==1.24.59
 botocore==1.27.59
