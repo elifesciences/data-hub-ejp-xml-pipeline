@@ -2,7 +2,7 @@ flake8==7.0.0
 pylint==2.15.6
 pytest==8.1.1
 pytest-watch==4.2.0
-mypy==1.10.0
+mypy==1.11.0
 types-PyYAML
 types-pytz
 types-python-dateutil
