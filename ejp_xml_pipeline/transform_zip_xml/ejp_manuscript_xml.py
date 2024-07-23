@@ -204,6 +204,17 @@ def manuscript_node_to_dict(
     }
 
 
+def preprint_node_to_dict(preprint_node: Element) -> dict:
+    return {
+        'preprint_doi': get_and_decode_xml_child_text(preprint_node, 'preprint-doi'),
+        'preprint_url': get_and_decode_xml_child_text(preprint_node, 'preprint-url'),
+        'preprint_version_number': get_and_decode_xml_child_text(
+            preprint_node,
+            'preprint-version-number'
+        ),
+    }
+
+
 def version_stage_node_to_dict(stage_node: Element) -> dict:
     return {
         'stage_timestamp': format_to_iso_timestamp(
@@ -482,6 +493,7 @@ def version_node_to_dict(
                 manuscript_id, created_timestamp
             )
         ),
+        'preprint': extract_list(version_node, 'preprint', preprint_node_to_dict),
         'manuscript_title': get_and_decode_xml_child_text(
             version_node, 'title'
         ),
