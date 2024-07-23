@@ -211,7 +211,7 @@ def preprint_node_to_dict(preprint_node: Element) -> dict:
         'preprint_version_number': get_and_decode_xml_child_text(
             preprint_node,
             'preprint-version-number'
-        ),
+        )
     }
 
 
