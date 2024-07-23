@@ -6,7 +6,7 @@ manuscriptVersionTable: 'sample_manuscript_version_truncated'
 personTable: 'sample_person_truncated'
 personVersion2Table: 'sample_person_v2'
 eJPXmlBucket: 'ci-elife-data-pipeline'
-eJPXmlObjectKeyPattern: 'airflow_test/ejp-xml-test-data/ejp_elife_*'
+eJPXmlObjectKeyPattern: 'airflow_test/ejp-xml-test-data/ejp_elife*'
 eJPXmlFileNameExclusionRegexPattern: '415-0.'
 stateFile:
   bucket: '{ENV}-elife-data-pipeline'
