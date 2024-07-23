@@ -483,7 +483,7 @@ class TestParseXml:
                 })])
             )
             assert (
-                _versions_prop(result.versions, 'preprint')[0]
+                result.versions[0].data['preprint']
                 == {
                     'preprint_doi': PREPRINT_1['preprint-doi'],
                     'preprint_url': PREPRINT_1['preprint-url'],
