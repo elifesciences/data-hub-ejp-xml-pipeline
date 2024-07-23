@@ -484,11 +484,11 @@ class TestParseXml:
             )
             assert (
                 _versions_prop(result.versions, 'preprint')[0]
-                == [{
+                == {
                     'preprint_doi': PREPRINT_1['preprint-doi'],
                     'preprint_url': PREPRINT_1['preprint-url'],
                     'preprint_version_number': PREPRINT_1['preprint-version-number']
-                }]
+                }
             )
 
         def test_should_extract_overall_stage_and_shorted_type_from_init_submission(self):

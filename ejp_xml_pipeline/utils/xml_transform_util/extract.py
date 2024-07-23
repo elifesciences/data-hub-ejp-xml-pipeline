@@ -22,3 +22,12 @@ def extract_list(
         transform_fn(node)
         for node in parent_node.xpath(xpath)
     ]
+
+
+def extract_single(
+        parent_node: Element, xpath: str,
+        transform_fn: Callable[[Element], dict]) -> Optional[dict]:
+    nodes = parent_node.xpath(xpath)
+    if nodes:
+        return transform_fn(nodes[0])
+    return None

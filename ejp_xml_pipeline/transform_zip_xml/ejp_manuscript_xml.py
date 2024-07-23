@@ -23,7 +23,7 @@ from ejp_xml_pipeline.model.entities import (
 )
 
 from ejp_xml_pipeline.utils.xml_transform_util.extract import (
-    format_optional_to_iso_timestamp, extract_list
+    extract_single, format_optional_to_iso_timestamp, extract_list
 )
 
 LOGGER = logging.getLogger(__name__)
@@ -493,7 +493,7 @@ def version_node_to_dict(
                 manuscript_id, created_timestamp
             )
         ),
-        'preprint': extract_list(version_node, 'preprint', preprint_node_to_dict),
+        'preprint': extract_single(version_node, 'preprint', preprint_node_to_dict),
         'manuscript_title': get_and_decode_xml_child_text(
             version_node, 'title'
         ),
