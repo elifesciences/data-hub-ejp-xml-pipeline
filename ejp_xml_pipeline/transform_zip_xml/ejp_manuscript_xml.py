@@ -23,7 +23,7 @@ from ejp_xml_pipeline.model.entities import (
 )
 
 from ejp_xml_pipeline.utils.xml_transform_util.extract import (
-    format_optional_to_iso_timestamp, extract_list
+    extract_single, format_optional_to_iso_timestamp, extract_list
 )
 
 LOGGER = logging.getLogger(__name__)
@@ -200,6 +200,17 @@ def manuscript_node_to_dict(
         'country': get_and_decode_xml_child_text(manuscript_node, 'country'),
         'doi': get_and_decode_xml_child_text(
             manuscript_node, 'production-data/production-data-doi'
+        )
+    }
+
+
+def preprint_node_to_dict(preprint_node: Element) -> dict:
+    return {
+        'preprint_doi': get_and_decode_xml_child_text(preprint_node, 'preprint-doi'),
+        'preprint_url': get_and_decode_xml_child_text(preprint_node, 'preprint-url'),
+        'preprint_version_number': get_and_decode_xml_child_text(
+            preprint_node,
+            'preprint-version-number'
         )
     }
 
@@ -482,6 +493,7 @@ def version_node_to_dict(
                 manuscript_id, created_timestamp
             )
         ),
+        'preprint': extract_single(version_node, 'preprint', preprint_node_to_dict),
         'manuscript_title': get_and_decode_xml_child_text(
             version_node, 'title'
         ),

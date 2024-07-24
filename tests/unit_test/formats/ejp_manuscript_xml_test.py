@@ -59,6 +59,12 @@ RESEARCH_ORGANISM_2 = 'Research Organism 2'
 KEYWORD_1 = 'Keyword 1'
 KEYWORD_2 = 'Keyword 2'
 
+PREPRINT_1 = {
+    'preprint-doi': 'preprint_doi_1',
+    'preprint-url': 'preprint_url_1',
+    'preprint-version-number': 'preprint_version_number_1'
+}
+
 ADDRESS_1 = {
     'address-type': 'Address Type 1',
     'address-country': 'Country 1',
@@ -468,6 +474,19 @@ class TestParseXml:
                 _versions_prop(result.versions, 'manuscript_type')
                 == [MANUSCRIPT_TYPE_1]
             )
+
+        def test_should_extract_preprint(self):
+            result = _parse_xml_with_defaults(
+                _manuscript_xml([_version_node({
+                    **VERSION_1,
+                    'preprint': PREPRINT_1
+                })])
+            )
+            assert result.versions[0].data['preprint'] == {
+                'preprint_doi': PREPRINT_1['preprint-doi'],
+                'preprint_url': PREPRINT_1['preprint-url'],
+                'preprint_version_number': PREPRINT_1['preprint-version-number']
+            }
 
         def test_should_extract_overall_stage_and_shorted_type_from_init_submission(self):
             full_manuscript_type = (
