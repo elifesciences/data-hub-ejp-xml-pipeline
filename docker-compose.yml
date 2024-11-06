@@ -42,6 +42,10 @@ services:
         command: /bin/sh -c exit 0
         entrypoint: []
 
+    data-hub-pipelines:
+        image:  elifesciences/data-hub-ejp-xml-pipeline
+        environment: *airflow-env
+
     webserver:
         depends_on:
             - worker

@@ -32,4 +32,13 @@ services:
             - ./sample_data_config/ci-ejp-xml-data-pipeline.config.yaml:/home/airflow/app-config/ejp-xml/ejp-xml-data-pipeline.config.yaml
             - ~/.aws/credentials:/home/airflow/.aws/credentials
 
-    
+
+    data-hub-pipelines:
+        volumes:
+            - ~/.config/gcloud/application_default_credentials.json:/tmp/credentials.json
+            - ./sample_data_config/ejp-xml-data-pipeline.config.yaml:/home/airflow/app-config/ejp-xml/ejp-xml-data-pipeline.config.yaml
+            - ~/.aws/credentials:/root/.aws/credentials
+        environment:
+            - PYTHONPATH=/home/airflow/.local/lib/python3.9/site-packages
+            - GOOGLE_APPLICATION_CREDENTIALS=/tmp/credentials.json
+        user: 0:0

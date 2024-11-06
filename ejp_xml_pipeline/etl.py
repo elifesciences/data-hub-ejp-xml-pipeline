@@ -30,7 +30,6 @@ from ejp_xml_pipeline.utils import (
     NamedDataPipelineLiterals as named_literals,
 )
 
-
 LOGGER = logging.getLogger(__name__)
 
 
@@ -151,9 +150,12 @@ def load_entity_file_to_bq(
 
 # pylint: disable='too-many-arguments'
 def download_load2bq_cleanup_temp_files(
-        matching_file_metadata_iter, s3_bucket: str,
-        gcp_project: str, dataset: str,
-        bq_table: str, batch_size_limit: int = 100000
+        matching_file_metadata_iter,
+        s3_bucket: str,
+        gcp_project: str,
+        dataset: str,
+        bq_table: str,
+        batch_size_limit: int = 100000
 ):
     written_file_row_count = 0
     s3_objects_written_to_file = []
@@ -163,7 +165,7 @@ def download_load2bq_cleanup_temp_files(
         )
         with open(temp_file_name, 'a', encoding="UTF-8") as writer:
             for matching_file_metadata, _ in matching_file_metadata_iter:
-                s3_object = matching_file_metadata.get(
+                s3_object = matching_file_metadata.get('name') or matching_file_metadata.get(
                     named_literals.S3_FILE_METADATA_NAME_KEY
                 )
                 jsonl_string = download_s3_object_as_string(
