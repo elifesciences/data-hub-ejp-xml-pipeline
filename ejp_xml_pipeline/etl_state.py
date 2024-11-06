@@ -1,3 +1,4 @@
+import logging
 import json
 from datetime import datetime
 from typing import Dict
@@ -9,6 +10,8 @@ from ejp_xml_pipeline.data_store.s3_data_service import (
 from ejp_xml_pipeline.utils.xml_transform_util.timestamp import (
     convert_datetime_string_to_datetime, convert_datetime_to_string
 )
+
+LOGGER = logging.getLogger(__name__)
 
 
 def update_state(
@@ -27,6 +30,11 @@ def get_stored_ejp_xml_processing_state(
         data_config: eJPXmlDataConfig,
         default_latest_file_date,
 ):
+    LOGGER.info(
+        'loading state from: s3://%s/%s',
+        data_config.state_file_bucket,
+        data_config.state_file_object
+    )
     try:
         downloaded_state = download_s3_json_object(
             data_config.state_file_bucket,

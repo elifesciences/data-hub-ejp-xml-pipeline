@@ -113,6 +113,11 @@ airflow-initdb:
 	$(DOCKER_COMPOSE) run --rm  webserver db init
 
 
+data-hub-pipelines-run-ejp-xml-pipeline:
+	$(DOCKER_COMPOSE) run --rm data-hub-pipelines \
+	python -m ejp_xml_pipeline.cli
+
+
 end2end-test:
 	$(MAKE) clean
 	$(MAKE) airflow-db-migrate
