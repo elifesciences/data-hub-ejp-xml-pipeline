@@ -26,6 +26,9 @@ from ejp_xml_pipeline.dag_pipeline_config.xml_config import (
 from ejp_xml_pipeline.data_store.bq_data_service import (
     load_file_into_bq, create_or_extend_table_schema
 )
+from ejp_xml_pipeline.utils import (
+    NamedDataPipelineLiterals as named_literals,
+)
 
 LOGGER = logging.getLogger(__name__)
 
@@ -162,7 +165,9 @@ def download_load2bq_cleanup_temp_files(
         )
         with open(temp_file_name, 'a', encoding="UTF-8") as writer:
             for matching_file_metadata, _ in matching_file_metadata_iter:
-                s3_object = matching_file_metadata['name']
+                s3_object = matching_file_metadata.get('name') or matching_file_metadata.get(
+                    named_literals.S3_FILE_METADATA_NAME_KEY
+                )
                 jsonl_string = download_s3_object_as_string(
                     s3_bucket,
                     s3_object
