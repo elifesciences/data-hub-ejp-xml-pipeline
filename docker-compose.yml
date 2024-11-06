@@ -29,7 +29,7 @@ services:
             GOOGLE_APPLICATION_CREDENTIALS: /tmp/credentials.json
         build:
             context: .
-        image: elifesciences/data-hub-ejp-xml-pipeline
+        image: ${IMAGE_REPO}:${IMAGE_TAG}
         command: ''
 
     data-hub-dags-dev:
@@ -38,12 +38,12 @@ services:
             dockerfile: Dockerfile
             args:
                 install_dev: y
-        image:  elifesciences/data-hub-ejp-xml-pipeline-dev
+        image:  ${IMAGE_REPO}-dev:${IMAGE_TAG}
         command: /bin/sh -c exit 0
         entrypoint: []
 
     data-hub-pipelines:
-        image:  elifesciences/data-hub-ejp-xml-pipeline
+        image:  ${IMAGE_REPO}:${IMAGE_TAG}
         environment: *airflow-env
 
     webserver:
@@ -52,7 +52,7 @@ services:
         environment: *airflow-env
         volumes:
             - ./config/webserver_config.py:/opt/airflow/webserver_config.py
-        image:  elifesciences/data-hub-ejp-xml-pipeline-dev
+        image:  ${IMAGE_REPO}-dev:${IMAGE_TAG}
         entrypoint: /entrypoint
         command: webserver
 
@@ -61,7 +61,7 @@ services:
         image:  namshi/smtp@sha256:aa63b8de68ce63dfcf848c56f3c1a16d81354f4accd4242a0086c57dd5a91d77
 
     scheduler:
-        image: elifesciences/data-hub-ejp-xml-pipeline-dev
+        image: ${IMAGE_REPO}-dev:${IMAGE_TAG}
         depends_on:
             - postgres
         environment: *airflow-env
@@ -74,7 +74,7 @@ services:
           - smtp-server
           - redis
           - scheduler
-        image: elifesciences/data-hub-ejp-xml-pipeline-dev
+        image: ${IMAGE_REPO}-dev:${IMAGE_TAG}
         entrypoint: /entrypoint
         hostname: worker
         command: >
@@ -82,7 +82,7 @@ services:
             && airflow celery worker"
 
     test-client:
-        image:  elifesciences/data-hub-ejp-xml-pipeline-dev
+        image:  ${IMAGE_REPO}-dev:${IMAGE_TAG}
         depends_on:
             - scheduler
             - webserver
@@ -109,7 +109,7 @@ services:
             - ALLOW_EMPTY_PASSWORD=yes
 
     # flower:
-    #     image: elifesciences/data-hub-ejp-xml-pipeline-dev
+    #     image: ${IMAGE_REPO}-dev:${IMAGE_TAG}
     #     depends_on:
     #         - redis
     #     environment: *airflow-env
