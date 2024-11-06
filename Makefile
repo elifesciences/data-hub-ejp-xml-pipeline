@@ -126,6 +126,10 @@ end2end-test:
 	$(MAKE) clean
 
 
+ci-build-main-image:
+	$(MAKE) DOCKER_COMPOSE="$(DOCKER_COMPOSE_CI)" \
+		build
+
 ci-test-exclude-e2e: build-dev
 	$(MAKE) DOCKER_COMPOSE="$(DOCKER_COMPOSE_CI)" \
 		test-exclude-e2e
@@ -138,3 +142,8 @@ ci-build-and-end2end-test:
 
 ci-clean:
 	$(DOCKER_COMPOSE_CI) down -v
+
+
+retag-push-image:
+	docker tag  $(EXISTING_IMAGE_REPO):$(EXISTING_IMAGE_TAG) $(IMAGE_REPO):$(IMAGE_TAG)
+	docker push  $(IMAGE_REPO):$(IMAGE_TAG)
