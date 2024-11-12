@@ -5,7 +5,6 @@ services:
         volumes:
             - ./tests:/opt/airflow/tests
             - ./ejp_xml_pipeline:/opt/airflow/ejp_xml_pipeline
-            - ./dags:/opt/airflow/dags
 
     webserver:
         ports:
