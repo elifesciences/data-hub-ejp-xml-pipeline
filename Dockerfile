@@ -25,7 +25,6 @@ RUN if [ "${install_dev}" = "y" ]; then pip install --disable-pip-version-check 
 ENV PATH /home/airflow/.local/bin:$PATH
 
 COPY ejp_xml_pipeline ./ejp_xml_pipeline
-COPY dags ./dags
 COPY setup.py ./setup.py
 RUN pip install -e . --user --no-dependencies
 

@@ -32,12 +32,10 @@ To set up the development environment:
  
 ## Project Folder/Package Organisation
 
-- `dags` package contains the airflow's data pipeline dag. 
-- `ejp_xml_pipeline` package consist of the packages and libraries and functions needed to run the pipeline in `dags` package.
+- `ejp_xml_pipeline` package consist of the packages and libraries and functions needed to run the pipeline.
 - `tests` contains the tests run on this implementation. These include these types
   - unit tests
   - end to end tests
-  - dag validation tests
 - `sample_data_config` folder contains the sample configurations for the data pipeline
  
  

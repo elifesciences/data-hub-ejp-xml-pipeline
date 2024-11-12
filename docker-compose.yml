@@ -83,9 +83,6 @@ services:
 
     test-client:
         image:  ${IMAGE_REPO}-dev:${IMAGE_TAG}
-        depends_on:
-            - scheduler
-            - webserver
         environment: *airflow-env
         command: >
             bash -c "sudo install -D /tmp/credentials.json -m 644 -t  /home/airflow/.config/gcloud

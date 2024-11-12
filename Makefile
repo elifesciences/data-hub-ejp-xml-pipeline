@@ -7,7 +7,7 @@ DOCKER_COMPOSE = $(DOCKER_COMPOSE_DEV)
 
 VENV = venv
 PIP = $(VENV)/bin/pip
-PYTHON = PYTHONPATH=dags $(VENV)/bin/python
+PYTHON = $(VENV)/bin/python
 
 PYTEST_WATCH_MODULES = tests/unit_test
 
@@ -33,22 +33,19 @@ dev-install:
 dev-venv: venv-create dev-install
 
 dev-flake8:
-	$(PYTHON) -m flake8 ejp_xml_pipeline dags tests
+	$(PYTHON) -m flake8 ejp_xml_pipeline tests
 
 dev-pylint:
-	$(PYTHON) -m pylint ejp_xml_pipeline dags tests
+	$(PYTHON) -m pylint ejp_xml_pipeline tests
 
 dev-mypy:
-	$(PYTHON) -m mypy ejp_xml_pipeline dags tests
+	$(PYTHON) -m mypy ejp_xml_pipeline tests
 
 dev-lint: dev-flake8 dev-pylint dev-mypy
 
 dev-unittest:
 	$(PYTHON) -m pytest -p no:cacheprovider $(ARGS) tests/unit_test
 
-
-dev-dagtest:
-	$(PYTHON) -m pytest -p no:cacheprovider $(ARGS) tests/dag_validation_test
 
 dev-integration-test: dev-install
 	$(VENV)/bin/airflow upgradedb
@@ -58,7 +55,7 @@ dev-watch:
 	$(PYTHON) -m pytest_watch -- -p no:cacheprovider $(ARGS) $(PYTEST_WATCH_MODULES)
 
 
-dev-test: dev-lint dev-unittest dev-dagtest
+dev-test: dev-lint dev-unittest
 
 build:
 	$(DOCKER_COMPOSE) build data-hub-dags
@@ -68,21 +65,17 @@ build-dev:
 
 flake8:
 	$(DOCKER_COMPOSE) run --rm data-hub-dags-dev \
-		python -m flake8 ejp_xml_pipeline dags tests
+		python -m flake8 ejp_xml_pipeline tests
 
 pylint:
 	$(DOCKER_COMPOSE) run --rm data-hub-dags-dev \
-		python -m pylint ejp_xml_pipeline dags tests
+		python -m pylint ejp_xml_pipeline tests
 
 mypy:
 	$(DOCKER_COMPOSE) run --rm data-hub-dags-dev \
-		python -m mypy ejp_xml_pipeline dags tests
+		python -m mypy ejp_xml_pipeline tests
 
 lint: flake8 pylint mypy
-
-dagtest:
-	$(DOCKER_COMPOSE) run --rm data-hub-dags-dev \
-		python -m pytest -p no:cacheprovider $(ARGS) tests/dag_validation_test
 
 unittest:
 	$(DOCKER_COMPOSE) run --rm data-hub-dags-dev \
@@ -119,11 +112,7 @@ data-hub-pipelines-run-ejp-xml-pipeline:
 
 
 end2end-test:
-	$(MAKE) clean
-	$(MAKE) airflow-db-migrate
-	$(MAKE) airflow-initdb
 	$(DOCKER_COMPOSE) run --rm  test-client
-	$(MAKE) clean
 
 
 ci-build-main-image:
