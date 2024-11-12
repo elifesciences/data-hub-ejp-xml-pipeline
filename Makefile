@@ -119,11 +119,7 @@ data-hub-pipelines-run-ejp-xml-pipeline:
 
 
 end2end-test:
-	$(MAKE) clean
-	$(MAKE) airflow-db-migrate
-	$(MAKE) airflow-initdb
 	$(DOCKER_COMPOSE) run --rm  test-client
-	$(MAKE) clean
 
 
 ci-build-main-image:
