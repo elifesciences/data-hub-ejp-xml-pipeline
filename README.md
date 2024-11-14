@@ -1,4 +1,4 @@
-# eJP XML Airflow Data Pipeline
+# eJP XML Data Pipeline
 This repository consists of a generic data pipeline that is used to ETL eJP XML dumps in S3 buckets.
 Being generic, it needs to be configured for its data source, data sink, and transformations.
 The sample configuration for this data pipeline can be found in `sample_data_config` directory of this project
@@ -9,10 +9,6 @@ To run this locally, review the `docker-compose.dev.override.yml` and `docker-co
 Following are the credentials that you may need to provide
 - GCP's service account json key (mandatory for all data pipelines)
 - AWS credentials
-
-To run the application locally:
-
-    make build-dev airflow-initdb airflow-start
 
 To run the whole test on the application:
     
@@ -42,4 +38,4 @@ To set up the development environment:
  ## CI/CD
  
  This runs on Jenkins and follows the standard approaches used by the `eLife Data Team` for CI/CD.
- Note that as part of the CI/CD, another Jenkins pipeline is always triggered whenever there is a commit to the develop branch. The latest commit reference to a `develop` branch is passed on as a parameter to this Jenkins pipeline to be triggered, and this is used to update the [repo-list.json file](https://github.com/elifesciences/data-hub-airflow-image/blob/develop/repo-list.json) in another repository
+ Note that as part of the CI/CD, another Jenkins pipeline is always triggered whenever there is a commit to the develop branch. The latest commit reference to a `develop` branch is passed on as a parameter to this Jenkins pipeline to be triggered.

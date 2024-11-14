@@ -58,53 +58,40 @@ dev-watch:
 dev-test: dev-lint dev-unittest
 
 build:
-	$(DOCKER_COMPOSE) build data-hub-dags
+	$(DOCKER_COMPOSE) build data-hub-pipelines
 
 build-dev:
-	$(DOCKER_COMPOSE) build data-hub-dags-dev
+	$(DOCKER_COMPOSE) build data-hub-pipelines-dev
 
 flake8:
-	$(DOCKER_COMPOSE) run --rm data-hub-dags-dev \
+	$(DOCKER_COMPOSE) run --rm data-hub-pipelines-dev \
 		python -m flake8 ejp_xml_pipeline tests
 
 pylint:
-	$(DOCKER_COMPOSE) run --rm data-hub-dags-dev \
+	$(DOCKER_COMPOSE) run --rm data-hub-pipelines-dev \
 		python -m pylint ejp_xml_pipeline tests
 
 mypy:
-	$(DOCKER_COMPOSE) run --rm data-hub-dags-dev \
+	$(DOCKER_COMPOSE) run --rm data-hub-pipelines-dev \
 		python -m mypy ejp_xml_pipeline tests
 
 lint: flake8 pylint mypy
 
 unittest:
-	$(DOCKER_COMPOSE) run --rm data-hub-dags-dev \
+	$(DOCKER_COMPOSE) run --rm data-hub-pipelines-dev \
 		python -m pytest -p no:cacheprovider $(ARGS) tests/unit_test
 
 test: lint unittest
 
 watch:
-	$(DOCKER_COMPOSE) run --rm data-hub-dags-dev \
+	$(DOCKER_COMPOSE) run --rm data-hub-pipelines-dev \
 		python -m pytest_watch -- -p no:cacheprovider $(ARGS) $(PYTEST_WATCH_MODULES)
 
-airflow-start:
-	$(DOCKER_COMPOSE) up worker webserver
-
-airflow-stop:
-	$(DOCKER_COMPOSE) down
-
 test-exclude-e2e: build-dev
-	$(DOCKER_COMPOSE) run --rm data-hub-dags-dev ./run_test.sh
+	$(DOCKER_COMPOSE) run --rm data-hub-pipelines-dev ./run_test.sh
 
 clean:
 	$(DOCKER_COMPOSE) down -v
-
-airflow-db-migrate:
-	$(DOCKER_COMPOSE) run --rm  webserver db migrate
-
-airflow-initdb:
-	$(DOCKER_COMPOSE) run --rm  webserver db init
-
 
 data-hub-pipelines-run-ejp-xml-pipeline:
 	$(DOCKER_COMPOSE) run --rm data-hub-pipelines \

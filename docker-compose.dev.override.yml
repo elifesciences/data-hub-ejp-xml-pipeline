@@ -1,36 +1,16 @@
 version: '3.4'
 
 services:
-    data-hub-dags-dev:
+    data-hub-pipelines-dev:
         volumes:
             - ./tests:/opt/airflow/tests
             - ./ejp_xml_pipeline:/opt/airflow/ejp_xml_pipeline
-
-    webserver:
-        ports:
-            - "8080:8080"
-        volumes:
-            - ~/.config/gcloud/application_default_credentials.json:/tmp/credentials.json
-            - ~/.aws/credentials:/home/airflow/.aws/credentials
-
-    scheduler:
-        volumes:
-            - ~/.config/gcloud/application_default_credentials.json:/tmp/credentials.json
-            - ~/.aws/credentials:/home/airflow/.aws/credentials
-
-    worker:
-        volumes:
-            - ~/.config/gcloud/application_default_credentials.json:/tmp/credentials.json
-            - ~/.aws/credentials:/home/airflow/.aws/credentials
-            - ./sample_data_config/ci-ejp-xml-data-pipeline.config.yaml:/home/airflow/app-config/ejp-xml/ejp-xml-data-pipeline.config.yaml
-
 
     test-client:
         volumes:
             - ~/.config/gcloud/application_default_credentials.json:/tmp/credentials.json
             - ./sample_data_config/ci-ejp-xml-data-pipeline.config.yaml:/home/airflow/app-config/ejp-xml/ejp-xml-data-pipeline.config.yaml
             - ~/.aws/credentials:/home/airflow/.aws/credentials
-
 
     data-hub-pipelines:
         volumes:
