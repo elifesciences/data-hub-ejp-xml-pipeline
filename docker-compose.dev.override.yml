@@ -3,21 +3,20 @@ version: '3.4'
 services:
     data-hub-pipelines-dev:
         volumes:
-            - ./tests:/opt/airflow/tests
-            - ./ejp_xml_pipeline:/opt/airflow/ejp_xml_pipeline
+            - ./tests:/ejp_xml_pipeline/tests
+            - ./ejp_xml_pipeline:/ejp_xml_pipeline/ejp_xml_pipeline
 
     test-client:
         volumes:
-            - ~/.config/gcloud/application_default_credentials.json:/tmp/credentials.json
-            - ./sample_data_config/ci-ejp-xml-data-pipeline.config.yaml:/home/airflow/app-config/ejp-xml/ejp-xml-data-pipeline.config.yaml
-            - ~/.aws/credentials:/home/airflow/.aws/credentials
+            - ~/.config/gcloud/application_default_credentials.json:/root/.config/gcloud/credentials.json
+            - ./sample_data_config/ci-ejp-xml-data-pipeline.config.yaml:/ejp_xml_pipeline/app-config/ejp-xml/ejp-xml-data-pipeline.config.yaml
+            - ~/.aws/credentials:/root/.aws/credentials
 
     data-hub-pipelines:
         volumes:
-            - ~/.config/gcloud/application_default_credentials.json:/tmp/credentials.json
-            - ./sample_data_config/ejp-xml-data-pipeline.config.yaml:/home/airflow/app-config/ejp-xml/ejp-xml-data-pipeline.config.yaml
+            - ~/.config/gcloud/application_default_credentials.json:/root/.config/gcloud/credentials.json
+            - ./sample_data_config/ejp-xml-data-pipeline.config.yaml:/ejp_xml_pipeline/app-config/ejp-xml/ejp-xml-data-pipeline.config.yaml
             - ~/.aws/credentials:/root/.aws/credentials
         environment:
-            - PYTHONPATH=/home/airflow/.local/lib/python3.9/site-packages
-            - GOOGLE_APPLICATION_CREDENTIALS=/tmp/credentials.json
+            - GOOGLE_APPLICATION_CREDENTIALS=/root/.config/gcloud/credentials.json
         user: 0:0
