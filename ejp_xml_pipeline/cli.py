@@ -39,7 +39,6 @@ DEPLOYMENT_ENV_ENV_NAME = "DEPLOYMENT_ENV"
 DEFAULT_DEPLOYMENT_ENV_VALUE = "ci"
 
 
-
 def get_default_initial_s3_last_modified_date():
     return os.getenv(
         INITIAL_S3_XML_FILE_LAST_MODIFIED_DATE_ENV_NAME,
