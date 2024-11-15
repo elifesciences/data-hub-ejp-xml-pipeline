@@ -3,6 +3,6 @@ version: '3.4'
 services:
     test-client:
         volumes:
-            - ./sample_data_config/ci-ejp-xml-data-pipeline.config.yaml:/home/airflow/app-config/ejp-xml/ejp-xml-data-pipeline.config.yaml
-            - ./credentials.json:/tmp/credentials.json
-            - ~/.aws/credentials:/home/airflow/.aws/credentials
+            - ./sample_data_config/ci-ejp-xml-data-pipeline.config.yaml:/ejp_xml_pipeline/app-config/ejp-xml/ejp-xml-data-pipeline.config.yaml
+            - ./credentials.json:/root/.config/gcloud/credentials.json
+            - ~/.aws/credentials:/root/.aws/credentials

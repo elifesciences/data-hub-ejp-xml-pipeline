@@ -1,16 +1,15 @@
-FROM apache/airflow:2.7.1-python3.9
+FROM python:3.9-slim
 ARG install_dev=n
 
 USER root
 
 RUN apt-get update \
-  && apt-get install sudo gcc -yqq \
+  && apt-get install gcc -yqq \
   && rm -rf /var/lib/apt/lists/*
 
-RUN usermod -aG sudo airflow
-RUN echo "airflow ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+ENV PIP_NO_CACHE_DIR=1
 
-USER airflow
+WORKDIR /ejp_xml_pipeline
 
 COPY requirements.build.txt ./
 RUN pip install --disable-pip-version-check -r requirements.build.txt --user
@@ -18,11 +17,8 @@ RUN pip install --disable-pip-version-check -r requirements.build.txt --user
 COPY requirements.txt ./
 RUN pip install --disable-pip-version-check -r requirements.txt --user
 
-USER airflow
 COPY requirements.dev.txt ./
 RUN if [ "${install_dev}" = "y" ]; then pip install --disable-pip-version-check --user -r requirements.dev.txt; fi
-
-ENV PATH /home/airflow/.local/bin:$PATH
 
 COPY ejp_xml_pipeline ./ejp_xml_pipeline
 COPY setup.py ./setup.py
@@ -33,8 +29,3 @@ COPY .flake8 ./.flake8
 COPY tests ./tests
 COPY mypy.ini ./
 COPY run_test.sh ./
-
-RUN mkdir -p $AIRFLOW_HOME/serve
-RUN ln -s $AIRFLOW_HOME/logs $AIRFLOW_HOME/serve/log
-
-ENTRYPOINT []

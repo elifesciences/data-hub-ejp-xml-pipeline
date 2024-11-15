@@ -3,9 +3,9 @@ version: '3.4'
 x-pipeline-env:
   &pipeline-env
   - LOAD_EX=n
-  - GOOGLE_APPLICATION_CREDENTIALS=/home/airflow/.config/gcloud/credentials.json
+  - GOOGLE_APPLICATION_CREDENTIALS=/root/.config/gcloud/credentials.json
   - DEPLOYMENT_ENV=ci
-  - EJP_XML_CONFIG_FILE_PATH=/home/airflow/app-config/ejp-xml/ejp-xml-data-pipeline.config.yaml
+  - EJP_XML_CONFIG_FILE_PATH=/ejp_xml_pipeline/app-config/ejp-xml/ejp-xml-data-pipeline.config.yaml
 
 
 services:
@@ -30,6 +30,5 @@ services:
         image:  ${IMAGE_REPO}-dev:${IMAGE_TAG}
         environment: *pipeline-env
         command: >
-            bash -c "sudo install -D /tmp/credentials.json -m 644 -t  /home/airflow/.config/gcloud
-            && ./run_test.sh with-end-to-end"
+            bash -c "./run_test.sh with-end-to-end"
 
