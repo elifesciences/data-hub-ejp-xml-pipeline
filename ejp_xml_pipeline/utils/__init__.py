@@ -10,9 +10,6 @@ class NamedDataPipelineLiterals:
     EJP_XML_CONFIG_FILE_PATH_ENV_NAME = (
         "EJP_XML_CONFIG_FILE_PATH"
     )
-    EJP_XML_SCHEDULE_INTERVAL_ENV_NAME = (
-        "EJP_XML_SCHEDULE_INTERVAL"
-    )
 
 
 def get_yaml_file_as_dict(file_location: str) -> dict:
