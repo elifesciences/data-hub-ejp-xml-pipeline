@@ -13,7 +13,6 @@ from ejp_xml_pipeline.etl import (
     download_load2bq_cleanup_temp_files
 )
 from ejp_xml_pipeline.utils import (
-    NamedDataPipelineLiterals as named_literals,
     get_yaml_file_as_dict
 )
 from ejp_xml_pipeline.etl_state import (
@@ -22,6 +21,12 @@ from ejp_xml_pipeline.etl_state import (
 )
 
 LOGGER = logging.getLogger(__name__)
+
+
+EJP_XML_CONFIG_FILE_PATH_ENV_NAME = (
+    "EJP_XML_CONFIG_FILE_PATH"
+)
+
 
 INITIAL_S3_XML_FILE_LAST_MODIFIED_DATE_ENV_NAME = (
     "INITIAL_S3_XML_FILE_LAST_MODIFIED_DATE"
@@ -50,7 +55,7 @@ def get_config() -> eJPXmlDataConfig:
     dep_env = os.getenv(
         DEPLOYMENT_ENV_ENV_NAME, DEFAULT_DEPLOYMENT_ENV_VALUE
     )
-    conf_file_path = os.environ[named_literals.EJP_XML_CONFIG_FILE_PATH_ENV_NAME]
+    conf_file_path = os.environ[EJP_XML_CONFIG_FILE_PATH_ENV_NAME]
     LOGGER.info('conf_file_path: %s', conf_file_path)
     data_config_dict = get_yaml_file_as_dict(
         conf_file_path
