@@ -5,6 +5,7 @@ from typing import Iterable, Tuple
 import fnmatch
 
 import botocore.session
+import yaml
 
 from ejp_xml_pipeline.dag_pipeline_config.xml_config import eJPXmlDataConfig
 from ejp_xml_pipeline.etl_state import get_stored_ejp_xml_processing_state
@@ -12,13 +13,11 @@ from ejp_xml_pipeline.etl import (
     etl_ejp_xml_zip,
     download_load2bq_cleanup_temp_files
 )
-from ejp_xml_pipeline.utils import (
-    get_yaml_file_as_dict
-)
 from ejp_xml_pipeline.etl_state import (
     update_state,
     update_object_latest_dates,
 )
+
 
 LOGGER = logging.getLogger(__name__)
 
@@ -42,6 +41,11 @@ DEFAULT_INITIAL_S3_XML_FILE_LAST_MODIFIED_DATE = "2020-01-01 00:00:00"
 
 DEPLOYMENT_ENV_ENV_NAME = "DEPLOYMENT_ENV"
 DEFAULT_DEPLOYMENT_ENV_VALUE = "ci"
+
+
+def get_yaml_file_as_dict(file_location: str) -> dict:
+    with open(file_location, 'r', encoding="UTF-8") as yaml_file:
+        return yaml.safe_load(yaml_file)
 
 
 def get_default_initial_s3_last_modified_date():
