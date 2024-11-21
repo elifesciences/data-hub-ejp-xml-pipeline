@@ -6,7 +6,6 @@ class NamedDataPipelineLiterals:
     RUN_ID = 'run_id'
     DAG_RUNNING_STATUS = 'running'
     S3_FILE_METADATA_NAME_KEY = "Key"
-    S3_FILE_METADATA_LAST_MODIFIED_KEY = "LastModified"
     EJP_XML_CONFIG_FILE_PATH_ENV_NAME = (
         "EJP_XML_CONFIG_FILE_PATH"
     )
