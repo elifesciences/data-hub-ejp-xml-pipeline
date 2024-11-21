@@ -2,7 +2,6 @@ import yaml
 
 
 class NamedDataPipelineLiterals:
-    RUN_ID = 'run_id'
     DAG_RUNNING_STATUS = 'running'
     S3_FILE_METADATA_NAME_KEY = "Key"
     EJP_XML_CONFIG_FILE_PATH_ENV_NAME = (
