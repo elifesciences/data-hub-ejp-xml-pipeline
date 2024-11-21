@@ -1,7 +1,7 @@
 import logging
 import os
 from datetime import datetime, timezone
-from typing import Iterable, Tuple
+from typing import Dict, Iterable, List, Sequence, Tuple
 import fnmatch
 
 import botocore.session
@@ -10,6 +10,7 @@ import yaml
 from ejp_xml_pipeline.dag_pipeline_config.xml_config import eJPXmlDataConfig
 from ejp_xml_pipeline.etl_state import get_stored_ejp_xml_processing_state
 from ejp_xml_pipeline.etl import (
+    FileMetadata,
     etl_ejp_xml_zip,
     download_load2bq_cleanup_temp_files
 )
@@ -78,13 +79,13 @@ def list_objects_with_pattern_and_timestamp(
     bucket: str,
     pattern: str,
     latest_timestamp: datetime
-) -> list:
+) -> Sequence[FileMetadata]:
     """
     List objects in S3 matching pattern and modified after latest_timestamp
     """
     prefix = pattern.split('*')[0]
     paginator = s3_client.get_paginator('list_objects_v2')
-    matching_objects = []
+    matching_objects: List[FileMetadata] = []
     LOGGER.info(
         'listing s3 objects with bucket: %s, pattern: %s and prefix: %s',
         bucket,
@@ -114,10 +115,10 @@ def etl_s3_object_pattern(
         data_config: 'eJPXmlDataConfig',
         obj_pattern_with_latest_dates: dict,
         s3_bucket_name: str
-) -> Iterable[Tuple]:
+) -> Iterable[Tuple[FileMetadata, str]]:
 
     s3_client = get_s3_client()
-    matching_files = {}
+    matching_files: Dict[str, Sequence[FileMetadata]] = {}
 
     # For each pattern and its timestamp, get matching objects
     for pattern, latest_timestamp in obj_pattern_with_latest_dates.items():
@@ -162,7 +163,7 @@ def etl_s3_object_pattern(
             yield file_metadata, object_key_pattern
 
 
-def etl_new_ejp_xml_files():
+def etl_new_ejp_xml_files() -> None:
     data_config = get_config()
     obj_pattern_with_latest_dates = (
         get_stored_ejp_xml_processing_state(
@@ -199,7 +200,7 @@ def etl_new_ejp_xml_files():
         )
 
 
-def load_temp_ejp_json_files_to_bq():
+def load_temp_ejp_json_files_to_bq() -> None:
     data_config = get_config()
     batch_size_limit = 100000
     for entity_type in data_config.entity_type_mapping.values():

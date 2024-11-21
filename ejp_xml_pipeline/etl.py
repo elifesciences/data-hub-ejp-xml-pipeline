@@ -1,7 +1,8 @@
+from datetime import datetime
 import os
 import io
 import logging
-from typing import List
+from typing import Iterable, List, Tuple
 import json
 
 from contextlib import contextmanager
@@ -9,6 +10,8 @@ from contextlib import ExitStack
 from tempfile import TemporaryDirectory
 from pathlib import Path
 from zipfile import ZipFile
+
+from typing_extensions import TypedDict
 
 from ejp_xml_pipeline.data_store.s3_data_service import (
     s3_open_binary_read,
@@ -29,6 +32,11 @@ from ejp_xml_pipeline.data_store.bq_data_service import (
 
 
 LOGGER = logging.getLogger(__name__)
+
+
+class FileMetadata(TypedDict):
+    name: str
+    last_modified: datetime
 
 
 def write_entities_in_parsed_doc_to_file(
@@ -148,7 +156,7 @@ def load_entity_file_to_bq(
 
 # pylint: disable='too-many-arguments'
 def download_load2bq_cleanup_temp_files(
-        matching_file_metadata_iter,
+        matching_file_metadata_iter: Iterable[Tuple[FileMetadata, str]],
         s3_bucket: str,
         gcp_project: str,
         dataset: str,
@@ -163,7 +171,7 @@ def download_load2bq_cleanup_temp_files(
         )
         with open(temp_file_name, 'a', encoding="UTF-8") as writer:
             for matching_file_metadata, _ in matching_file_metadata_iter:
-                s3_object = matching_file_metadata.get('name')
+                s3_object = matching_file_metadata['name']
                 jsonl_string = download_s3_object_as_string(
                     s3_bucket,
                     s3_object
