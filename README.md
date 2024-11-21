@@ -13,6 +13,8 @@ Following are the credentials that you may need to provide
 - GCP's service account json key (mandatory for all data pipelines)
 - AWS credentials
 
+### Using Docker
+
 To run the whole test on the application:
 
     make build-dev end2end-test
@@ -21,12 +23,30 @@ To run tests excluding the end to end tests:
 
     make build-dev test-exclude-e2e
 
+To run the pipeline (which uses a state file):
+
+    make data-hub-pipelines-run-ejp-xml-pipeline
+
+### Using a Virtual Environment
+
 To set up the development environment:
 
     # initial setup
     make dev-venv
     # update dependencies
     make dev-install
+
+To run the test:
+
+    make dev-test
+
+To run the pipeline (which uses a state file):
+
+    make dev-run-ejp-xml-pipeline
+
+To clear the state:
+
+    make dev-clear-state
 
 ## Project Folder/Package Organisation
 
