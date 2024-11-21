@@ -1,8 +1,9 @@
-from datetime import datetime
+from datetime import datetime, timezone
+import fnmatch
 import os
 import io
 import logging
-from typing import Iterable, List, Tuple
+from typing import Dict, Iterable, List, Sequence, Tuple
 import json
 
 from contextlib import contextmanager
@@ -13,11 +14,18 @@ from zipfile import ZipFile
 
 from typing_extensions import TypedDict
 
+import botocore
+
 from ejp_xml_pipeline.data_store.s3_data_service import (
     s3_open_binary_read,
     download_s3_object_as_string,
     delete_s3_objects,
     upload_file_into_s3
+)
+from ejp_xml_pipeline.etl_state import (
+    get_stored_ejp_xml_processing_state,
+    update_object_latest_dates,
+    update_state
 )
 from ejp_xml_pipeline.transform_zip_xml.ejp_zip import (
     iter_parse_xml_in_zip,
@@ -217,3 +225,160 @@ def load_and_delete_temp_objects(
     delete_s3_objects(
         s3_bucket, s3_objects_written_to_file
     )
+
+
+def get_s3_client():
+    session = botocore.session.get_session()
+    return session.create_client('s3')
+
+
+def list_objects_with_pattern_and_timestamp(
+    s3_client,
+    bucket: str,
+    pattern: str,
+    latest_timestamp: datetime
+) -> Sequence[FileMetadata]:
+    """
+    List objects in S3 matching pattern and modified after latest_timestamp
+    """
+    prefix = pattern.split('*')[0]
+    paginator = s3_client.get_paginator('list_objects_v2')
+    matching_objects: List[FileMetadata] = []
+    LOGGER.info(
+        'listing s3 objects with bucket: %s, pattern: %s and prefix: %s',
+        bucket,
+        pattern,
+        prefix
+    )
+    try:
+        for page in paginator.paginate(Bucket=bucket, Prefix=prefix):
+            if 'Contents' in page:
+                for obj in page['Contents']:
+                    key = obj['Key']
+                    last_modified = obj['LastModified']
+                    # Check both pattern match and timestamp
+                    if (fnmatch.fnmatch(key, pattern) and last_modified > latest_timestamp):
+                        matching_objects.append({
+                            'name': key,
+                            'last_modified': last_modified
+                        })
+    except botocore.exceptions.ClientError as err:
+        LOGGER.error('Error listing objects with prefix %s: %s', prefix, err)
+        raise
+
+    return matching_objects
+
+
+def etl_s3_object_pattern(
+        data_config: 'eJPXmlDataConfig',
+        obj_pattern_with_latest_dates: dict,
+        s3_bucket_name: str
+) -> Iterable[Tuple[FileMetadata, str]]:
+
+    s3_client = get_s3_client()
+    matching_files: Dict[str, Sequence[FileMetadata]] = {}
+
+    # For each pattern and its timestamp, get matching objects
+    for pattern, latest_timestamp in obj_pattern_with_latest_dates.items():
+        objects = list_objects_with_pattern_and_timestamp(
+            s3_client,
+            s3_bucket_name,
+            pattern,
+            latest_timestamp
+        )
+        if objects:
+            matching_files[pattern] = objects
+            LOGGER.info(
+                'Found %d new files for pattern %s modified after %s',
+                len(objects),
+                pattern,
+                latest_timestamp.isoformat()
+            )
+
+    # Process matching files
+    for object_key_pattern, files_list in matching_files.items():
+        sorted_files = sorted(
+            files_list,
+            key=lambda x: x['last_modified']
+        )
+
+        for object_index, file_metadata in enumerate(sorted_files):
+            object_key = file_metadata['name']
+            s3_bucket = (
+                data_config.temp_file_s3_bucket
+                if object_key.endswith('.json')
+                else data_config.s3_bucket
+            )
+
+            LOGGER.info(
+                'processing file (%d / %d): s3://%s/%s',
+                1 + object_index,
+                len(sorted_files),
+                s3_bucket,
+                object_key
+            )
+
+            yield file_metadata, object_key_pattern
+
+
+def etl_new_ejp_xml_files(
+    data_config: eJPXmlDataConfig,
+    default_initial_s3_last_modified_date_str: str
+) -> None:
+    obj_pattern_with_latest_dates = (
+        get_stored_ejp_xml_processing_state(
+            data_config,
+            default_initial_s3_last_modified_date_str
+        )
+    )
+    LOGGER.info('obj_pattern_with_latest_dates: %s', obj_pattern_with_latest_dates)
+    matching_file_metadata_iter = etl_s3_object_pattern(
+        data_config,
+        obj_pattern_with_latest_dates,
+        data_config.s3_bucket,
+    )
+
+    for matching_file_metadata, object_key_pattern in matching_file_metadata_iter:
+        LOGGER.info('matching_file_metadata: %s', matching_file_metadata)
+        object_key = matching_file_metadata['name']
+
+        etl_ejp_xml_zip(
+            data_config, object_key,
+        )
+
+        updated_obj_pattern_with_latest_dates = (
+            update_object_latest_dates(
+                obj_pattern_with_latest_dates,
+                object_key_pattern,
+                matching_file_metadata['last_modified']
+            )
+        )
+        update_state(
+            updated_obj_pattern_with_latest_dates,
+            data_config.state_file_bucket,
+            data_config.state_file_object
+        )
+
+
+def load_temp_ejp_json_files_to_bq(
+    data_config: eJPXmlDataConfig
+) -> None:
+    batch_size_limit = 100000
+    for entity_type in data_config.entity_type_mapping.values():
+        obj_pattern_with_latest_date = {
+            entity_type.s3_object_wildcard_prefix:
+                datetime.min.replace(tzinfo=timezone.min)
+        }
+        matching_file_metadata_iter = etl_s3_object_pattern(
+            data_config,
+            obj_pattern_with_latest_date,
+            data_config.temp_file_s3_bucket,
+        )
+        download_load2bq_cleanup_temp_files(
+            matching_file_metadata_iter,
+            data_config.temp_file_s3_bucket,
+            data_config.gcp_project,
+            data_config.dataset,
+            entity_type.table_name,
+            batch_size_limit
+        )
