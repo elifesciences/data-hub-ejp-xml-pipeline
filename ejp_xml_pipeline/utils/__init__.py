@@ -2,7 +2,6 @@ import yaml
 
 
 class NamedDataPipelineLiterals:
-    DAG_RUN = 'dag_run'
     RUN_ID = 'run_id'
     DAG_RUNNING_STATUS = 'running'
     S3_FILE_METADATA_NAME_KEY = "Key"
