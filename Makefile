@@ -58,6 +58,9 @@ dev-run-ejp-xml-pipeline:
 		$(PYTHON) -m ejp_xml_pipeline.cli
 
 
+dev-clear-state:
+	aws s3 rm s3://ci-elife-data-pipeline/airflow-config/ejp-xml/ejp-xml-processing-state-test.json
+
 
 build:
 	$(DOCKER_COMPOSE) build data-hub-pipelines
