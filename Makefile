@@ -52,6 +52,16 @@ dev-watch:
 
 dev-test: dev-lint dev-unittest
 
+
+dev-run-ejp-xml-pipeline:
+	EJP_XML_CONFIG_FILE_PATH=sample_data_config/ejp-xml-data-pipeline.config.yaml \
+		$(PYTHON) -m ejp_xml_pipeline.cli
+
+
+dev-clear-state:
+	aws s3 rm s3://ci-elife-data-pipeline/airflow-config/ejp-xml/ejp-xml-processing-state-test.json
+
+
 build:
 	$(DOCKER_COMPOSE) build data-hub-pipelines
 
