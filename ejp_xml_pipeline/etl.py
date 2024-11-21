@@ -26,9 +26,7 @@ from ejp_xml_pipeline.dag_pipeline_config.xml_config import (
 from ejp_xml_pipeline.data_store.bq_data_service import (
     load_file_into_bq, create_or_extend_table_schema
 )
-from ejp_xml_pipeline.utils import (
-    NamedDataPipelineLiterals as named_literals,
-)
+
 
 LOGGER = logging.getLogger(__name__)
 
