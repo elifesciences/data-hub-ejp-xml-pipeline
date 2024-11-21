@@ -52,6 +52,13 @@ dev-watch:
 
 dev-test: dev-lint dev-unittest
 
+
+dev-run-ejp-xml-pipeline:
+	EJP_XML_CONFIG_FILE_PATH=sample_data_config/ejp-xml-data-pipeline.config.yaml \
+		$(PYTHON) -m ejp_xml_pipeline.cli
+
+
+
 build:
 	$(DOCKER_COMPOSE) build data-hub-pipelines
 
