@@ -4,7 +4,7 @@ pytz==2024.2
 boto3==1.24.59
 botocore==1.27.59
 bigquery-schema-generator==1.6.1
-google-cloud-bigquery==3.27.0
+google-cloud-bigquery==3.29.0
 six==1.17.0
 urllib3>=1.25.4, <2.3
 PyYAML==6.0.2
