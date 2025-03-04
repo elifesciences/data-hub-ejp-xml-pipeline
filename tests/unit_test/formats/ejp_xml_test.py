@@ -19,7 +19,7 @@ FILENAME_1 = 'file.xml'
 
 PARSED_TIMESTAMP_1 = parse_timestamp(TIMESTAMP_1)
 
-PROVENANCE_1 = dict(source_filename=FILENAME_1)
+PROVENANCE_1 = {'source_filename': FILENAME_1}
 
 
 @pytest.fixture(name='parse_manuscript_xml')

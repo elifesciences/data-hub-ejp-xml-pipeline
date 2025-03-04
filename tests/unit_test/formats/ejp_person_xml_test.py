@@ -130,12 +130,12 @@ ENCODED_TEXT = '&apos;'
 DECODED_TEXT = "'"
 
 
-PROVENANCE_1 = dict(source_filename=FILENAME_1)
+PROVENANCE_1 = {'source_filename': FILENAME_1}
 
-DEFAULT_PARSE_XML_KWARGS = dict(
-    modified_timestamp=parse_timestamp(TIMESTAMP_2),
-    provenance=PROVENANCE_1
-)
+DEFAULT_PARSE_XML_KWARGS = {
+    'modified_timestamp': parse_timestamp(TIMESTAMP_2),
+    'provenance': PROVENANCE_1
+}
 
 
 def _parse_xml_with_defaults(*args, **kwargs):
