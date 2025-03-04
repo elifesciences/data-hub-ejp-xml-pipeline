@@ -127,13 +127,13 @@ LIST_AND_ITEM_TAG_NAME_BY_PROP = {
     'roles': ('roles', 'role')
 }
 
-PROVENANCE_1 = dict(source_filename=MANUSCRIPT_FILENAME_1)
+PROVENANCE_1 = {'source_filename': MANUSCRIPT_FILENAME_1}
 
 
-DEFAULT_PARSE_XML_KWARGS = dict(
-    modified_timestamp=parse_timestamp(TIMESTAMP_2),
-    provenance=PROVENANCE_1
-)
+DEFAULT_PARSE_XML_KWARGS = {
+    'modified_timestamp': parse_timestamp(TIMESTAMP_2),
+    'provenance': PROVENANCE_1
+}
 
 
 ENCODED_TEXT = '&apos;'

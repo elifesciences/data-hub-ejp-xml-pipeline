@@ -32,7 +32,7 @@ XML_FILE_2 = 'file2.xml'
 XML_EXCLUSION_FILE_1 = '415-0.xml'
 XML_FILE_EXCLUSION_PATTERN = r'415-0\.'
 
-PROVENANCE_1 = dict(source_filename='dummy.xml')
+PROVENANCE_1 = {'source_filename': 'dummy.xml'}
 
 
 @pytest.fixture(name='parse_xml_mock')

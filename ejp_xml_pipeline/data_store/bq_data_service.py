@@ -13,7 +13,7 @@ from bigquery_schema_generator.generate_schema import SchemaGenerator
 LOGGER = logging.getLogger(__name__)
 
 
-# pylint: disable=too-many-arguments
+# pylint: disable=too-many-arguments, too-many-positional-arguments
 def load_file_into_bq(
         filename: str,
         project_name: str,

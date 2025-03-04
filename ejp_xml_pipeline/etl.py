@@ -162,7 +162,7 @@ def load_entity_file_to_bq(
         )
 
 
-# pylint: disable='too-many-arguments'
+# pylint: disable=too-many-arguments, too-many-positional-arguments
 def download_load2bq_cleanup_temp_files(
         matching_file_metadata_iter: Iterable[Tuple[FileMetadata, str]],
         s3_bucket: str,
