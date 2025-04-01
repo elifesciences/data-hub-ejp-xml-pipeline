@@ -1,6 +1,6 @@
 lxml==5.3.1
 python-dateutil==2.9.0.post0
-pytz==2025.1
+pytz==2025.2
 boto3==1.24.59
 botocore==1.27.59
 bigquery-schema-generator==1.6.1
