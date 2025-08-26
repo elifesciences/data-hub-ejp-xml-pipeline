@@ -8,4 +8,4 @@ google-cloud-bigquery==3.36.0
 six==1.17.0
 urllib3>=1.25.4, <2.6
 PyYAML==6.0.2
-typing-extensions==4.14.1
+typing-extensions==4.15.0
