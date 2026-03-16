@@ -5,8 +5,8 @@ DOCKER_COMPOSE_DEV = docker-compose -f docker-compose.yml -f docker-compose.dev.
 DOCKER_COMPOSE = $(DOCKER_COMPOSE_DEV)
 
 
-VENV = venv
-PIP = $(VENV)/bin/pip
+VENV = .venv
+UV = VIRTUAL_ENV=$(VENV) uv
 PYTHON = $(VENV)/bin/python
 
 PYTEST_WATCH_MODULES = tests/unit_test
@@ -17,18 +17,11 @@ venv-clean:
 	fi
 
 venv-create:
-	python3 -m venv $(VENV)
-
-venv-activate:
-	chmod +x venv/bin/activate
-	bash -c "venv/bin/activate"
+	$(UV) venv $(VENV)
 
 dev-install:
-	$(PIP) install --disable-pip-version-check -r requirements.build.txt
-	SLUGIFY_USES_TEXT_UNIDECODE=yes \
-	$(PIP) install --disable-pip-version-check -r requirements.txt
-	$(PIP) install --disable-pip-version-check -r requirements.dev.txt
-	$(PIP) install --disable-pip-version-check -e . --no-deps
+	$(UV) sync --active --frozen \
+		--dev
 
 dev-venv: venv-create dev-install
 
