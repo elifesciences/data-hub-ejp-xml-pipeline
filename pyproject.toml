@@ -3,7 +3,7 @@ name = "data-hub-ejp-xml-pipeline"
 version = "0.0.0"
 description = "eJP XML Data Pipeline"
 readme = "README.md"
-requires-python = ">=3.9.7"
+requires-python = ">=3.12"
 dependencies = [
     "bigquery-schema-generator>=1.6.1",
     "boto3>=1.24.59",
