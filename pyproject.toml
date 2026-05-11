@@ -15,7 +15,7 @@ dependencies = [
     "pyyaml>=6.0.3",
     "six>=1.17.0",
     "typing-extensions>=4.15.0",
-    "urllib3>=2.6.3,<2.8",
+    "urllib3>=2.7.0,<2.8",
 ]
 
 [dependency-groups]
